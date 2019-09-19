@@ -10,6 +10,22 @@ h1, p, label, button {
     padding: 0;
     color: white;
     font-family: 'Press Start 2P', cursive;
+    transition: 0.5s all;
+}
+
+p, label {
+    text-shadow:
+    0px 0px 0px #ffffff;
+    transition: all 0.5s;
+}
+
+p:hover, label:hover {
+    text-shadow: 
+    0px 0px 3px #ffffff59;
+}
+
+h1:hover{
+    filter: hue-rotate(720deg) saturate(200%);
 }
 
 button {
@@ -36,7 +52,7 @@ label {
 
 .wrapper {
     width: 50%;
-    max-width: 600px;
+    max-width: 400px;
     margin: 0 auto;
 }
 
@@ -70,12 +86,13 @@ label {
 }
 
 .hidden{
-    transform: translate(110vw, 0);
+    transform: translate(-110vw, 0);
+    filter: hue-rotate(180deg);
 }
 
 .switch{
     transition: all 0s;
-    transform: translate(-110vw, 0);
+    transform: translate(110vw, 0);
 }
 
 @media screen and (max-width: 600px) {
@@ -94,5 +111,9 @@ label {
     header {
         height: 100px;
         padding: 10px;
+    }
+
+    h1{
+        transform: scale(0.8, 0.8);
     }
 }

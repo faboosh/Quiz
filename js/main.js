@@ -1,10 +1,21 @@
+class Player{
+    constructor(name) {
+        this.name = name || '';
+        this.currentQuestion = 0;
+    }
+}
+//Initierar frågeräknaren
+ 
+let currentQuestion = 0;
+
 class Question {
-    constructor() {
+    constructor(player) {
+        this.player = player;
         //objekt som håller nuvarande laddade frågor
         this.questions = {};
         //Skapar ett objekt med referenser till HTML-elementen för frågan + svarsalternativ
         window.addEventListener('DOMContentLoaded', () => {
-            this.qBox = {
+            this.currentQuestion = {
                 q: document.getElementById('question'),
                 options: [
                     document.getElementById('lbl1'),
@@ -19,11 +30,11 @@ class Question {
 
     //Sätter vilken fråga som nu är aktiv, tar frågeobjekt som input
     setQuestion(question) {
-        this.qBox.q.innerHTML = question.title;
+        this.currentQuestion.q.innerHTML = question.title;
         for (let i = 0; i < question.options.length; i++) {
-            q.qBox.options[i].innerHTML = `<input type="checkbox" id="option${i + 1}">${question.options[i]}`;
+            q.currentQuestion.options[i].innerHTML = `<input type="checkbox" id="option${i + 1}">${question.options[i]}`;
         }
-        this.qBox.correct = question.correct;
+        this.currentQuestion.correct = question.correct;
     }
 
     //Sköter all CSS som krävs för övergången mellan frågor
@@ -42,15 +53,20 @@ class Question {
 
     //Kör övergången mellan frågor och laddar in nästa fråga
     nextQuestion() {
-        currectQuestion++;
+        if(player.currentQuestion >= this.questions.length - 1){
+            this.player.currentQuestion = 0;
+        } else {
+            this.player.currentQuestion++;
+        }
+
         this.transitionToNextQuestion();
         setTimeout(() => {
-            this.setQuestion(this.questions[currectQuestion])
+            this.setQuestion(this.questions[this.player.currentQuestion])
         }, 500);
     }
 
+    //Laddar in frågorna från questions.json och parsear dem till objektet 'questions'
     loadQuestions() {
-        //Laddar in frågorna från questions.json och parsear dem till objektet 'questions'
         let req = new XMLHttpRequest();
 
         req.onload = () => {
@@ -60,13 +76,13 @@ class Question {
 
             } else {
                 console.log('The request failed!');
-                q.qBox.q.innerHTML = "Failed to get questions, try reloading page";
+                q.currentQuestion.q.innerHTML = "Failed to get questions, try reloading page";
             }
 
             this.questions = JSON.parse(this.questions);
             this.questions = this.questions.questions;
 
-            this.setQuestion(this.questions[currectQuestion]);
+            this.setQuestion(this.questions[this.player.currentQuestion]);
 
             document.getElementById('nextQuestion').addEventListener('click', () => {
                 this.nextQuestion();
@@ -77,13 +93,11 @@ class Question {
         req.send();
     }
 }
-
-const q = new Question();
+const player = new Player(prompt('What is your name?'));
+const q = new Question(player);
 q.loadQuestions();
 
-//Initierar frågeräknaren
- 
-let currectQuestion = 0;
+
 
 
 

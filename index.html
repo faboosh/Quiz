@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/colors.css">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet"> 
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <title>Quiz Master 2.0</title>
+</head>
+
+<header class="" style="background: var(--bglight)">
+    <h1 class="rainbow-bg-text">Quiz Master 2.0</h1>
+</header>
+<body>
+
+    <div class="wrapper">
+        <div class="question-box rainbow-boxshadow" id="questionBox">
+            <p class="question" id="question"></p>
+            <div class="options">
+                <label id="lbl1" for="option1"></label>
+                <label id="lbl2" for="option2"><input type="checkbox" id="option2"></label>
+                <label id="lbl3" for="option3"><input type="checkbox" id="option3"></label>
+                <label id="lbl4" for="option4"><input type="checkbox" id="option4"></label>
+            </div>
+            <button id="nextQuestion" class="rainbow-button-hover">Next Question</button>
+        </div>
+    </div>
+     
+    <script src="js/main.js"></script>
+</body>
+</html>

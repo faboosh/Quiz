@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #111;
+    overflow-x: hidden;
+}
+
+h1, p, label, button {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+}
+
+button {
+    background: var(--bgdark);
+    border: none;
+    margin-top: 20px;
+}
+
+header {
+    width: 100%;
+    height: 75px;
+    background: rgb(75, 75, 75);
+    display: flex;
+    justify-content: center;
+}
+
+header h1 {
+    align-self: center;
+}
+
+label {
+    font-size: 0.8em;  
+}
+
+.wrapper {
+    width: 50%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.question-box {
+    margin-top: 20px;
+    width: 100%;
+    min-height: 400px;
+    background: var(--lowmid);
+    padding: 30px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 2fr 1fr;
+    transition: all 0.300s ease-in-out;
+}
+
+.options{
+    grid-template-columns: 1fr;
+    background: var(--highmid);
+    padding: 20px;
+    display: grid;
+}
+
+.options input[type='checkbox'] {
+    color: black;
+    transform: scale(1.25,1);
+}
+
+.question {
+    margin-top: 20;
+}
+
+.hidden{
+    transform: translate(110vw, 0);
+}
+
+.switch{
+    transition: all 0s;
+    transform: translate(-110vw, 0);
+}
+
+@media screen and (max-width: 600px) {
+    .wrapper{
+        width: 95%
+    }
+
+    .options{
+        padding: 5px;
+    }
+
+    button, p {
+        transform: scale(1,1);
+    }
+
+    header {
+        height: 100px;
+        padding: 10px;
+    }
+}

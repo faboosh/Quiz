@@ -1,0 +1,92 @@
+:root{
+    --bgdark: #030500;
+    --bglight: #111111;
+    --lowmid: #2d2d2d;
+    --highmid: #545454;
+    --highlight: #f0f0f0;
+}
+
+.rainbow-bg {
+    background: 
+    linear-gradient(180deg,
+    #ff3232 0% 3%,
+    #ff9932 3% 6%,
+    #32ff40 6% 9%,
+    #3273ff 9% 12%,
+    #9532ff 12% 15%,
+    rgba(17, 17, 17, 0.623) 15%,
+      var(--lowmid) 18% 100%
+    );
+}
+
+.rainbow-bg-text {
+    text-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        2px 2px 0px #3273ff,
+        2px 2px 2px #3273ff,
+        4px 4px 0px #9532ff,
+        4px 4px 4px #9532ff,
+        6px 6px 0px #ff3232,
+        6px 6px 6px #ff3232,
+        8px 8px 0px #ff9932,
+        8px 8px 8px #ff9932,
+        10px 10px 0px #32ff40,
+        10px 10px 10px #32ff40;
+}
+
+.rainbow-boxshadow {
+    box-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        2px 2px 0px #3273ff,
+        4px 4px 0px #9532ff,
+        6px 6px 0px #ff3232,
+        8px 8px 0px #ff9932,
+        10px 10px 0px #32ff40;   
+}
+
+.rainbow-button-hover {
+    box-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        0 0 0px #3273ff,
+        0 0 0px #9532ff,
+        0 0 0px #ff3232,
+        0 0 0px #ff9932,
+        0 0 0px #32ff40;
+    transition: all 0.1s;     
+}
+
+.rainbow-button-hover:hover {
+    box-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        0 0 0px 2px #3273ff,
+        0 0 0px 4px #9532ff,
+        0 0 0px 6px #ff3232,
+        0 0 0px 8px #ff9932,
+        0 0 0px 10px #32ff40,
+        0 0 10px 10px #32ff40;
+    text-shadow: 0px 0px 5px white;   
+}
+
+.viginette {
+    box-shadow: inset 0px 0px 20px 10px rgba(0,0,0,0.2);
+}
+/*
+:root{
+    --bgdark: #171724;
+    --bglight: #2e2e47;
+    --lowmid: #414166;
+    --highmid: #57578a;
+    --highlight: #f0f8ff;
+}

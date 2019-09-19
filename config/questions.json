@@ -8,7 +8,7 @@
                 "Convex Randomized Tubes",
                 "Contact Radiation Tube"
             ],
-            "correct": "Cathode Ray Tube"
+            "correct": ["Cathode Ray Tube"]
         },
     
         {
@@ -19,7 +19,7 @@
                 "Bruce",
                 "Darla"
             ],
-            "correct": "Dory"
+            "correct": ["Dory"]
         },
 
         {
@@ -30,7 +30,7 @@
                 "2003",
                 "2004"
             ],
-            "correct": "2001"
+            "correct": ["2001"]
         },
 
         {
@@ -41,7 +41,29 @@
                 "Floral Shoppe",
                 "Chill Divin' with ECCO"
             ],
-            "correct": "Lisa Frank 420/Modern Computing"
+            "correct": ["Lisa Frank 420/Modern Computing"]
+        },
+
+        {
+            "title": "Who sung the vocals on deadmau5's hit single \"Ghosts and Stuff\"?",
+            "options": [
+                "Madeon",
+                "Rob Swire",
+                "Sonny Moore",
+                "Maksim MC"
+            ],
+            "correct": ["Rob Swire"]
+        },
+
+        {
+            "title": "Which of the following are members of Metallica",
+            "options": [
+                "Kurt Cobain",
+                "James Hetfield",
+                "Sonny Moore",
+                "Lars Ulrich"
+            ],
+            "correct": ["Kurt Cobain","Lars Ulrich"]
         }
     ]
 }

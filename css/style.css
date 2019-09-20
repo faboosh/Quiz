@@ -20,7 +20,7 @@ p, label {
 }
 
 h1:hover{
-    filter: hue-rotate(720deg) saturate(200%);
+    filter: hue-rotate(-720deg) saturate(200%);
 }
 
 button {

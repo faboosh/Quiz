@@ -16,12 +16,7 @@ h1, p, label, button {
 p, label {
     text-shadow:
     0px 0px 0px #ffffff;
-    transition: all 0.5s;
-}
-
-p:hover, label:hover {
-    text-shadow: 
-    0px 0px 3px #ffffff59;
+    transition: all 0.25s;
 }
 
 h1:hover{
@@ -86,13 +81,50 @@ label {
 }
 
 .hidden{
-    transform: translate(-110vw, 0);
-    filter: hue-rotate(180deg);
+    transform: translate(-110vw, 0) rotate(-10deg);
+    filter: hue-rotate(180deg) opacity(0%);
 }
 
 .switch{
     transition: all 0s;
-    transform: translate(110vw, 0);
+    transform: translate(110vw, 0) rotate(-10deg);
+}
+
+span:hover {
+    text-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        1px 1px 0px #3273ff,
+        1px 1px 1px #3273ff,
+        2px 2px 0px #9532ff,
+        2px 2px 2px #9532ff,
+        3px 3px 0px #ff3232,
+        3px 3px 3px #ff3232,
+        4px 4px 0px #ff9932,
+        4px 4px 4px #ff9932,
+        5px 5px 0px #32ff40,
+        5px 5px 5px #32ff40;
+}
+
+span {
+    transition: all 0.1s;
+    text-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        0 0 0 #000,
+        0 0 0px #3273ff,
+        0 0 0 #3273ff,
+        0 0 0px #9532ff,
+        0 0 0 #9532ff,
+        0 0 0px #ff3232,
+        0 0 0 #ff3232,
+        0 0 0px #ff9932,
+        0 0 0 #ff9932,
+        0 0 0px #32ff40,
+        0 0 0 #32ff40;    
 }
 
 @media screen and (max-width: 600px) {
@@ -113,7 +145,7 @@ label {
         padding: 10px;
     }
 
-    h1{
+    h1 {
         transform: scale(0.8, 0.8);
     }
 }

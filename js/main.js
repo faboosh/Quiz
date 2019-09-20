@@ -1,12 +1,10 @@
-class Player{
+class Quiz{
     constructor(name) {
         this.name = name || '';
+        //Initierar frågeräknaren
         this.currentQuestion = 0;
     }
 }
-//Initierar frågeräknaren
- 
-let currentQuestion = 0;
 
 class Question {
     constructor(player) {
@@ -23,7 +21,7 @@ class Question {
                     document.getElementById('lbl3'),
                     document.getElementById('lbl4')
                 ],
-                correct: ''
+                correct: []
             }
         });
     }
@@ -41,11 +39,13 @@ class Question {
     transitionToNextQuestion() {
         let box = document.getElementById('questionBox');
         box.classList.add('hidden');
+        box.classList.add('rainbow-boxshadow-flight');
         setTimeout(() => {
             box.classList.add('switch');
         }, 500);
         setTimeout(() => {
             box.classList.remove('hidden');
+            box.classList.remove('rainbow-boxshadow-flight');
 
             box.classList.remove('switch');
         }, 600);
@@ -93,7 +93,7 @@ class Question {
         req.send();
     }
 }
-const player = new Player(prompt('What is your name?'));
+const player = new Quiz(/*prompt('What is your name?')*/);
 const q = new Question(player);
 q.loadQuestions();
 

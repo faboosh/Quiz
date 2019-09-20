@@ -50,6 +50,20 @@
         10px 10px 0px #32ff40;   
 }
 
+.rainbow-boxshadow-flight {
+    box-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        20px 20px 0 #000,
+        80px 20px 0px #3273ff,
+        160px 20px 0px #9532ff,
+        200px 20px 0px #ff3232,
+        300px 20px 0px #ff9932,
+        400px 20px 0px #32ff40;   
+}
+
+
 .rainbow-button-hover {
     box-shadow:
         -1px -1px 0 #000,  

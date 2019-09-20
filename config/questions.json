@@ -1,7 +1,7 @@
 {   
     "questions": [
         {
-            "title": "What does the CRT in CRT TV stand for?",
+            "title": "What does the <span>CRT</span> in CRT-TV stand for?",
             "options": [
                 "Controlled Radiation Tubes",
                 "Cathode Ray Tube",
@@ -12,7 +12,7 @@
         },
     
         {
-            "title": "Who coined the phrase \"Just keep swimming\"?",
+            "title": "Who coined the phrase <span>\"Just keep swimming\"</span>?",
             "options": [
                 "Marty",
                 "Dory",
@@ -23,7 +23,7 @@
         },
 
         {
-            "title": "What year was Super Smash Bros: Melee released?",
+            "title": "What year was <span>Super Smash Bros: Melee</span> released?",
             "options": [
                 "2002",
                 "2001",
@@ -34,7 +34,7 @@
         },
 
         {
-            "title": "What song, by Macintosh Plus, has been dubbed the \"National Anthem of Vaporwave\"?",
+            "title": "What song, by Macintosh Plus, has been dubbed the <span>\"National Anthem of Vaporwave\"?</span>",
             "options": [
                 "Boot",
                 "Lisa Frank 420/Modern Computing",
@@ -45,7 +45,7 @@
         },
 
         {
-            "title": "Who sung the vocals on deadmau5's hit single \"Ghosts and Stuff\"?",
+            "title": "Who sung the vocals on deadmau5's hit single <span>\"Ghosts and Stuff\"</span>?",
             "options": [
                 "Madeon",
                 "Rob Swire",
@@ -56,7 +56,7 @@
         },
 
         {
-            "title": "Which of the following are members of Metallica",
+            "title": "Which of the following are members of <span>Metallica</span>",
             "options": [
                 "Kurt Cobain",
                 "James Hetfield",

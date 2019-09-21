@@ -31,7 +31,7 @@ class Question {
     set(question) {
         this.question.title.innerHTML = question.title;
         for (let i = 0; i < question.options.length; i++) {
-            q.question.options[i].innerHTML = `<input type="checkbox" id="option${i + 1}">${question.options[i]}`;
+            q.question.options[i].innerHTML = `<input type="checkbox" id="option${i+1}"><span></span><p>${question.options[i]}</p>`;
         }
         this.question.correct = question.correct;
     }
@@ -39,17 +39,14 @@ class Question {
     //Sköter all CSS som krävs för övergången mellan frågor
     transition() {
         let box = document.getElementById('questionBox');
-        box.classList.add('hidden');
-        box.classList.add('rainbow-boxshadow-flight');
+        box.classList.add('hidden', 'rainbow-boxshadow-flight');
 
         setTimeout(() => {
             box.classList.add('switch');
         }, 500);
 
         setTimeout(() => {
-            box.classList.remove('hidden');
-            box.classList.remove('rainbow-boxshadow-flight');
-            box.classList.remove('switch');
+            box.classList.remove('hidden', 'rainbow-boxshadow-flight', 'switch');
         }, 600);
     };
 
@@ -62,55 +59,41 @@ class Question {
 
     //Kör övergången mellan frågor och laddar in nästa fråga
     next() {
-        if(player.question >= this.questions.length - 1){
+        if(this.player[0].question >= this.questions.length - 1){
             this.player[0].question = 0;
         } else {
             this.player[0].question++;
         }
 
-        console.log(this.checkAnswer());
+        if(this.checkAnswer()){
+            this.question.title.innerText= 'Correct!';
+        } else {
+            this.question.title.innerText= 'Incorrect :(';
+        }
 
-        this.transition();
+        setTimeout(this.transition, 400);
         setTimeout(() => {
             this.set(this.questions[this.player[0].question])
-        }, 500);
+        }, 600);
     }
 
-    //Laddar in frågorna från questions.json och parsear dem till objektet 'questions'
-    load() {
-        let req = new XMLHttpRequest();
+    //Laddar in frågorna från en JSON-fil och parsear dem till objektet 'questions'
+    async load() {
+        let fetcher = new QuestionFetcher();
+        this.questions = await fetcher.fetch();
 
-        //Sparar innehållet från JSON-filen i 'questions', ifall det misslyckas skrivs detta ut på skärmen
-        req.onload = () => {
-            if (req.status >= 200 && req.status < 300) {
-                console.log('Questions loaded');
-            } else {
-                console.log('The request failed!');
-                q.question.title.innerHTML = "Failed to get questions, try reloading page";
-            }
+        //Sätter nuvarande fråga till första frågan i 'questions' och renderar den i dokumentet
+        this.set(this.questions[0]);
 
-            //Gör om JSON-strängen till ett objekt och hämtar ut relevant data
-            this.questions = JSON.parse(req.response).questions;
-
-            //Sätter nuvarande fråga till första frågan i 'questions' och renderar den i DOM
-            this.set(this.questions[this.player[0].question]);
-
-            //Lägger en event listener på en knapp, som kör funktionen som laddar och renderar nästa fråga
-            document.getElementById('nextQuestion').addEventListener('click', () => {
-                this.next();
-            });
-        };
-        
-        //Specar sökväg till JSON-filen och skickar requesten 
-        req.open('GET', 'config/questions.json');
-        req.send();
+        //Lägger en event listener på en knapp, som kör funktionen som laddar och renderar nästa fråga
+        document.getElementById('nextQuestion').addEventListener('click', () => {
+            this.next();
+        });
     }
 }
 
-
-const player = new Quiz('Fabian');
 const q = new Question();
-q.player.push(player);
+q.player.push(new Quiz('Fabian'));
 q.load();
 
 

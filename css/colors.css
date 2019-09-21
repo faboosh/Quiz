@@ -25,16 +25,16 @@
         1px -1px 0 #000,
         -1px 1px 0 #000,
         1px 1px 0 #000,
-        2px 2px 0px #3273ff,
-        2px 2px 2px #3273ff,
-        4px 4px 0px #9532ff,
-        4px 4px 4px #9532ff,
-        6px 6px 0px #ff3232,
-        6px 6px 6px #ff3232,
-        8px 8px 0px #ff9932,
-        8px 8px 8px #ff9932,
-        10px 10px 0px #32ff40,
-        10px 10px 10px #32ff40;
+        0px 4px 0px #3273ff,
+        0px 4px 2px #3273ff,
+        0px 6px 0px #9532ff,
+        0px 6px 4px #9532ff,
+        0px 9px 0px #ff3232,
+        0px 9px 6px #ff3232,
+        0px 12px 0px #ff9932,
+        0px 12px 8px #ff9932,
+        0px 15px 0px #32ff40,
+        0px 15px 10px #32ff40;
 }
 
 .rainbow-boxshadow {
@@ -43,11 +43,11 @@
         1px -1px 0 #000,
         -1px 1px 0 #000,
         1px 1px 0 #000,
-        2px 2px 0px #3273ff,
-        4px 4px 0px #9532ff,
-        6px 6px 0px #ff3232,
-        8px 8px 0px #ff9932,
-        10px 10px 0px #32ff40;   
+        0px 0px 0px #3273ff,
+        0px 0px 0px #9532ff,
+        0px 0px 0px #ff3232,
+        0px 0px 0px #ff9932,
+        0px 0px 0px #32ff40;   
 }
 
 .rainbow-boxshadow-flight {
@@ -55,12 +55,12 @@
         -1px -1px 0 #000,  
         1px -1px 0 #000,
         -1px 1px 0 #000,
-        20px 20px 0 #000,
-        80px 20px 0px #3273ff,
-        160px 20px 0px #9532ff,
-        200px 20px 0px #ff3232,
-        300px 20px 0px #ff9932,
-        400px 20px 0px #32ff40;   
+        40px 20px 0 #000,
+        160px 40px 0px #3273ff,
+        320px 80px 0px #9532ff,
+        400px 100px 0px #ff3232,
+        600px 150px 0px #ff9932,
+        800px 200px 0px #32ff40;   
 }
 
 

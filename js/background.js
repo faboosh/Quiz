@@ -32,7 +32,7 @@ class Star {
         this.oscPos = 0;
         this.oscMax = 1000;
         this.polarity = true;
-        this.hasTrail = Math.random() > 0.95;
+        this.hasTrail = Math.random() > 0.98;
         this.hasTrailSpeed = false;
         this.trail = [];
         this.trailInterval = 5;
@@ -49,10 +49,11 @@ class Star {
     drawTrail() {
         for (let i = 1; i < this.trail.length; i++) {
             pen.beginPath();
-            pen.arc(this.trail[i][0], this.trail[i][1], this.size * i / 10, 0, 2 * Math.PI);
+            pen.arc(this.trail[i][0], this.trail[i][1], this.size / 2, 0, 2 * Math.PI);
             pen.fillStyle = `rgba(255,255,255, ${1 * i / this.trail.length})`;
             pen.fill();
         }
+        
     }
 
     draw() {
@@ -67,7 +68,7 @@ class Star {
         pen.fill();*/
 
         pen.beginPath();
-        pen.arc(this.x, this.y, this.size, 0, 2 * Math.PI);    
+        pen.arc(this.x, this.y, this.size , 0, 2 * Math.PI);    
         pen.fillStyle = `rgba(255,255,255, ${1})`;
         pen.fill();
         /*
@@ -90,7 +91,7 @@ class Star {
 
 let stars = [];
 
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 300; i++) {
     stars.push(new Star(3, w * Math.random(), h * Math.random()));
 }
 
@@ -114,25 +115,28 @@ function loop() {
             }
         }
         
-        if (star.trailInterval >= 4) {
+        if (star.trailInterval >= 6) {
             star.trail.push([star.x, star.y]);
             star.trailInterval = 0;
         } else {
             star.trailInterval++;
-            if (star.trail.length > 10) {
+            if (star.trail.length > 15) {
                 star.trail.splice(0, 1);
             }
         }
 
-        star.x += star.velX * (Math.random()+ star.getSine());
+        star.x += star.velX * (Math.random()+ star.getSine()) / 4;
         if (star.x >= c.width || star.x < 0) {
             star.velX -= 2 * star.velX;
         }
 
-        star.y += star.velY * (Math.random() + star.getSine());
+        star.y += star.velY * (Math.random() + star.getSine() / 4);
         if (star.y >= c.height || star.y < 0) {
             star.velY -= 2 * star.velY;
         }
+
+        //star.x = Math.floor(star.x);
+        //star.y = Math.floor(star.y);
 
         if(star.hasTrail) {
             star.drawTrail();

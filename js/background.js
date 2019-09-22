@@ -1,7 +1,7 @@
 let c = document.getElementById('bgCanvas');
 let pen = c.getContext('2d');
-let w = window.innerWidth / 4;
-let h = window.innerHeight / 4;
+let w = window.innerWidth;
+let h = window.innerHeight;
 c.style.imageRendering = "pixelated";
 
 c.width = w;
@@ -20,10 +20,10 @@ window.addEventListener('mousemove', (e) => {
 class Star {
     constructor(size, x, y) {
         let randomSize = size * Math.random() / 2;
-        if (randomSize >= 0.1) {
+        if (randomSize >= 0.2) {
             this.size = randomSize;
         } else {
-            this.size = 0.1;
+            this.size = 0.2;
         }
         this.x = x;
         this.y = y;
@@ -93,60 +93,70 @@ class Star {
 
 let stars = [];
 
-for (let i = 0; i < 150; i++) {
-    stars.push(new Star(1, w * Math.random(), h * Math.random()));
+for (let i = 0; i < 600; i++) {
+    stars.push(new Star(2, w * Math.random(), h * Math.random()));
 }
+let flipflop = false;
 
 function loop() {
-    
-    w = window.innerWidth / 4;
-    h = window.innerHeight / 4;
+    let start = 0;
+    let end = 0;
+    if (!flipflop) {
+        flipflop = true;
+        start = 0;
+        end = stars.length / 2;
+    } else {
+        flipflop = false;
+        start = stars.length / 2;
+        end = stars.length;
+        pen.clearRect(0, 0, c.width, c.height);
+    }
+
+    w = window.innerWidth;
+    h = window.innerHeight;
     c.width = w;
     c.height = h;
     pen.clearRect(0, 0, c.width, c.height);
 
-    stars.forEach((star) => {
-        if (star.polarity) {
-            star.oscPos += star.oscRate;
-            if (star.oscPos >= star.oscMax) {
-                star.polarity = false;
+    for(let i = start; i < end; i++) {
+        if (stars[i].polarity) {
+            stars[i].oscPos += stars[i].oscRate;
+            if (stars[i].oscPos >= stars[i].oscMax) {
+                stars[i].polarity = false;
             }
         } else {
-            star.oscPos -= star.oscRate;
-            if (star.oscPos < 0) {
-                star.polarity = true;
+            stars[i].oscPos -= stars[i].oscRate;
+            if (stars[i].oscPos < 0) {
+                stars[i].polarity = true;
             }
         }
         
-        if (star.trailInterval >= 6) {
-            star.trail.push([star.x, star.y]);
-            star.trailInterval = 0;
+        if (stars[i].trailInterval >= 6) {
+            stars[i].trail.push([stars[i].x, stars[i].y]);
+            stars[i].trailInterval = 0;
         } else {
-            star.trailInterval++;
-            if (star.trail.length > 15) {
-                star.trail.splice(0, 1);
+            stars[i].trailInterval++;
+            if (stars[i].trail.length > 15) {
+                stars[i].trail.splice(0, 1);
             }
         }
 
-        star.x += star.velX * (Math.random()+ star.getSine()) / 4;
-        if (star.x >= c.width || star.x < 0) {
-            star.velX -= 2 * star.velX;
+        stars[i].x += stars[i].velX * (Math.random()+ stars[i].getSine()) / 4;
+        if (stars[i].x >= c.width || stars[i].x < 0) {
+            stars[i].velX -= 2 * stars[i].velX;
         }
 
-        star.y += star.velY * (Math.random() + star.getSine() / 4);
-        if (star.y >= c.height || star.y < 0) {
-            star.velY -= 2 * star.velY;
+        stars[i].y += stars[i].velY * (Math.random() + stars[i].getSine() / 4);
+        if (stars[i].y >= c.height || stars[i].y < 0) {
+            stars[i].velY -= 2 * stars[i].velY;
         }
 
-        //star.x = Math.floor(star.x);
-        //star.y = Math.floor(star.y);
-
-        if(star.hasTrail) {
-            star.drawTrail();
-            if(!star.hasTrailSpeed){
-                star.velY *= 2;
-                star.velX *= 2;
-                star.hasTrailSpeed = true; 
+        if(stars[i].hasTrail) {
+            stars[i].drawTrail();
+            if(!stars[i].hasTrailSpeed){
+                stars[i].velY *= 4;
+                stars[i].velX *= 4;
+                stars[i].hasTrailSpeed = true; 
             }
             
         }
@@ -155,8 +165,9 @@ function loop() {
         pen.msImageSmoothingEnabled = false;
         pen.imageSmoothingEnabled = false;
 
-        star.draw();
-    })
+        stars[i].draw();
+    }
+
 
 
     window.requestAnimationFrame(loop);

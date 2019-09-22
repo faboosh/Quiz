@@ -33,6 +33,7 @@ class Question {
     //Sätter vilken fråga som nu är aktiv, tar frågeobjekt som input
     set(question) {
         document.getElementById('progress').innerHTML = `Current question: ${this.player[0].question + 1}/${this.questions.length}`;
+        document.getElementById('title').innerHTML = `&#128187;RETROQUIZ&#128187; ${this.player[0].question + 1}/${this.questions.length}`;
         this.question.title.innerHTML = question.title;
         for (let i = 0; i < question.options.length; i++) {
             this.question.options[i].innerHTML = `<input type="checkbox" id="option${i+1}"><span></span><p>${question.options[i]}</p>`;
@@ -113,7 +114,21 @@ class Question {
 
 const q = new Question();
 q.player.push(new Quiz('Fabian'));
-q.load();
+
+function startGame() {
+    document.getElementById('question-box').classList.remove('hidden');
+    document.getElementById('startmenu').classList.add('hidden');
+    q.load();
+}
+
+document.getElementById('startButton').addEventListener('click', 
+() =>{
+    document.getElementById('startmenu').classList.add('hidden');
+
+    setTimeout(() => {document.getElementById('question-box').classList.remove('hidden')}, 500); 
+    q.load();
+});
+
 
 
 

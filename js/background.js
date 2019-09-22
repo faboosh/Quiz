@@ -6,30 +6,28 @@ let w = window.innerWidth;
 let h = window.innerHeight;
 let centerW = window.innerWidth / 2;
 let centerH = window.innerHeight / 2;
-//c.style.imageRendering = "pixelated";
 
 function setWH() {
-    centerW = window.innerWidth/2;
-    centerH = window.innerHeight/2
+    centerW = window.innerWidth / 2;
+    centerH = window.innerHeight / 2
     w = window.innerWidth;
     h = window.innerHeight;
     c1.width = w;
     c1.height = h;
     c2.width = w;
-    c2.height = h;    
+    c2.height = h;
 }
 
+//Sets width and height of canvas to browser window
 setWH();
 
-
-
-let noOfStars = 500;
+let noOfStars = 800;
 let stars = [];
 
-function drawStars(){
+function drawStars(number) {
     stars = [];
 
-    for (let i = 0; i < noOfStars; i++) {
+    for (let i = 0; i < number; i++) {
         stars.push(new Star(2.5, w * Math.random(), h * Math.random()));
     }
 }
@@ -46,8 +44,35 @@ window.addEventListener('mousemove', (e) => {
 
 window.addEventListener('resize', () => {
     setWH();
-    drawStars();
+    drawStars(noOfStars);
 })
+
+class SpaceShip {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.velX = 3;
+        this.velY = -1;
+        this.paused = true;
+        this.img = new Image();
+        this.img.onload = () => {
+
+        }
+        this.img.src = 'img/spaceship.png';
+    }
+
+    draw(ctx) {
+        ctx.drawImage(this.img, this.x, this.y, this.img.width, this.img.height);
+    }
+}
+
+let ship = new SpaceShip(0, h * Math.random());
+
+class GravityWell {
+    constructor() {
+
+    }
+}
 
 class Star {
     constructor(size, x, y) {
@@ -101,7 +126,7 @@ class Star {
     }
 }
 
-drawStars();
+drawStars(noOfStars);
 let alternate = false;
 
 function loop() {
@@ -117,7 +142,7 @@ function loop() {
         pen = pen2;
         alternate = false;
         start = stars.length / 2;
-        end = stars.length;                          
+        end = stars.length;
     }
 
     pen.clearRect(0, 0, w, h);
@@ -177,6 +202,24 @@ function loop() {
         }
 
         stars[i].draw(pen);
+    }
+
+    if (Math.random() > 0.999) {
+        ship.paused = false;
+    }
+
+    if(!ship.paused){
+        if (ship.x > w) {
+            ship.y = h * Math.random();
+            ship.velY = Math.random() - 0.5;
+            ship.x = -100;
+            ship.paused = true;;
+        } else {
+            //ship.y += ship.velY;
+            ship.x += ship.velX;
+        }
+    
+        ship.draw(pen);
     }
 
     window.requestAnimationFrame(loop);

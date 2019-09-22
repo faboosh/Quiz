@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/colors.css">
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet"> 
-    <title>RETROQUIZ</title>
+    <title id="title"> RETROQUIZ</title>
 </head>
 
 <header class="" style="background: var(--bglight)">
@@ -18,13 +18,13 @@
 </header>
 
 <body>   
-    <div class="startmenu hidden">
+    <div class="startmenu" id="startmenu">
         <h1>WELCOME TO RETROQUIZ</h1>
-        <button class="rainbow-button-hover">Next</button>   
+        <button class="rainbow-button-hover" id="startButton">Start</button>   
     </div>
     
     <div class="wrapper">
-        <div class="question-box rainbow-boxshadow" id="question-box">
+        <div class="question-box rainbow-boxshadow hidden" id="question-box">
             <p class="question" id="question"></p>
             <div class="options">
                 <label class="checkbox" id="lbl1" for="option1"></label><br>

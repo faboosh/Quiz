@@ -70,11 +70,11 @@
         1px -1px 0 #000,
         -1px 1px 0 #000,
         1px 1px 0 #000,
-        0 0 0px #3273ff,
-        0 0 0px #9532ff,
-        0 0 0px #ff3232,
-        0 0 0px #ff9932,
-        0 0 0px #32ff40;
+        inset 0 0 0px #3273ff,
+        inset 0 0 0px #9532ff,
+        inset 0 0 0px #ff3232,
+        inset 0 0 0px #ff9932,
+        inset 0 0 0px #32ff40;
     transition: all 0.25s;    
     filter: hue-rotate(720deg); 
 }
@@ -85,14 +85,14 @@
         1px -1px 0 #000,
         -1px 1px 0 #000,
         1px 1px 0 #000,
-        0 0 0px 2px #3273ff,
-        0 0 0px 4px #9532ff,
-        0 0 0px 6px #ff3232,
-        0 0 0px 8px #ff9932,
-        0 0 0px 10px #32ff40,
-        0 0 10px 10px #32ff40;
+        inset 0 0 0px 2px #3273ff,
+        inset 0 0 0px 4px #9532ff,
+        inset 0 0 0px 6px #ff3232,
+        inset 0 0 0px 8px #ff9932,
+        inset 0 0 0px 10px #32ff40,
+        inset 0 0 10px 10px #32ff40;
     text-shadow: 0px 0px 5px white;  
-    filter: hue-rotate(0deg) saturate(200%);  
+    filter: hue-rotate(0deg);  
 }
 
 .viginette {

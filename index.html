@@ -4,20 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/background.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/colors.css">
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet"> 
-    <title>Quiz Master</title>
+    <title>RETROQUIZ</title>
 </head>
 
 <header class="" style="background: var(--bglight)">
     <h1 class="rainbow-bg-text">RETROQUIZ</h1>
+    <canvas id="bgCanvas"></canvas>
 </header>
 
-<body>
-
-    <div class="wrapper">
-        <div class="question-box rainbow-boxshadow" id="questionBox">
+<body>   
+    
+    <div class="startmenu ">
+        <h1>WELCOME TO RETROQUIZ</h1>
+        <button class="rainbow-button-hover">Next</button>   
+    </div>
+    <div class="wrapper hidden">
+        <div class="question-box rainbow-boxshadow" id="question-box">
             <p class="question" id="question"></p>
             <div class="options">
                 <label class="checkbox" id="lbl1" for="option1"></label><br>
@@ -27,8 +33,13 @@
             </div>
             <button id="nextQuestion" class="rainbow-button-hover">Next Question</button>
         </div>
+
+        <div class="progress">
+            <p id="progress"></p>
+        </div>
     </div>
     
+    <script src="js/background.js"></script>
     <script src="js/questionAPI.js"></script>
     <script src="js/main.js"></script>
 </body>

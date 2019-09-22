@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     background: #111;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 h1, p, label, button {
@@ -18,7 +18,8 @@ header {
 }
 
 h1 {
-    transform: rotateX(10deg) scale(1.5, 1.8);
+    transform: rotateX(10deg) scale(1.5, 1.8) translate(1%, 0);
+    z-index: 1;
 }
 
 h1:hover{
@@ -39,7 +40,7 @@ button {
 
 header {
     width: 100%;
-    height: 100px;
+    height: 120px;
     background: rgb(75, 75, 75);
     display: flex;
     justify-content: center;
@@ -60,21 +61,24 @@ label {
 }
 
 .question-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -90%);
     margin-top: 20px;
-    width: 100%;
+    width: 60%;
     min-height: 400px;
+    max-width: 600px;
     background: var(--lowmid);
     padding: 30px;
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 2fr 1fr;
-    transition: all 0.300s ease-in-out;
+    transition: all 0.6s ease-in-out;
 }
 
 .options{
-    /*grid-template-columns: 1fr;
-    display: grid;*/
     padding: 0px; 
     display: block;
 }
@@ -83,9 +87,16 @@ label {
     margin-top: 20;
 }
 
-.hidden{
-    transform: translate(-110vw, 0) rotate(-10deg);
+.fly{
+    transition: all 0.6s ease-in-out;
+    transform: translate(-110vw, -90%) rotate(-10deg);
     filter: hue-rotate(180deg) opacity(0%);
+}
+
+.fly-failed{
+    transition: all 0.6s ease-in-out;
+    transform: translate(-110vw, 100vh) rotate(-180deg);
+    filter: hue-rotate(180deg) opacity(0%) saturation(0%);
 }
 
 .switch{
@@ -93,41 +104,23 @@ label {
     transform: translate(110vw, 0) rotate(-10deg);
 }
 
+.celebrate.celebrate.celebrate {
+    transition: 0.4s all;
+    background: #9532ff69;
+    filter: hue-rotate(360deg);
+    box-shadow: 0 0 20px 20px #9532ff69;
+}
+
 span:hover {
-    text-shadow:
-        -1px -1px 0 #000,  
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000,
-        1px 1px 0px #3273ff,
-        1px 1px 1px #3273ff,
-        2px 2px 0px #9532ff,
-        2px 2px 2px #9532ff,
-        3px 3px 0px #ff3232,
-        3px 3px 3px #ff3232,
-        4px 4px 0px #ff9932,
-        4px 4px 4px #ff9932,
-        5px 5px 0px #32ff40,
-        5px 5px 5px #32ff40;
+    text-shadow: 0 0 10px #fff;
+}
+
+span p:hover {
+    transform: scale(1.05);
 }
 
 span {
-    transition: all 0.1s;
-    text-shadow:
-        -1px -1px 0 #000,  
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        0 0 0 #000,
-        0 0 0px #3273ff,
-        0 0 0 #3273ff,
-        0 0 0px #9532ff,
-        0 0 0 #9532ff,
-        0 0 0px #ff3232,
-        0 0 0 #ff3232,
-        0 0 0px #ff9932,
-        0 0 0 #ff9932,
-        0 0 0px #32ff40,
-        0 0 0 #32ff40;    
+    transition: all 0.1s;   
 }
 
 .checkbox {
@@ -151,23 +144,21 @@ span {
     -moz-appearance: none;
     -o-appearance: none;
     appearance: none;
-    border: 1px solid var(--highmid);
-    border-radius: 0;
+    clip-path: polygon(100% 50%, 0 0, 0 100%);
     outline: none;
-    transition-duration: 0.3s;
-    background-color: var(--lowmid);
+    transition: all 0.5s;
+    background: linear-gradient(var(--bglight), var(--bglight), var(--bglight), var(--bglight), var(--bglight));;
     cursor: pointer;
   }
 
 .checkbox > input:checked {
-    border: 1px solid var(--highlight);
-    border-radius: 5px;
-    box-shadow:
-    inset 0px 0px 4px 2px #3273ff ,
-    inset 0px 0px 4px 4px #9532ff ,
-    inset 0px 0px 4px 8px #ff3232 ,
-    inset 0px 0px 4px 10px #ff9932 ,
-    inset 0px 0px 4px 12px #32ff40;
+    background: linear-gradient(#fff, #fff, #fff, #fff, #fff);
+
+}
+
+.checkbox > input:active {
+    background: linear-gradient(#fff, #fff, #fff, #fff, #fff);
+    border: 2px solid #34495E;
 }
 
 .checkbox > input:checked + span::before {
@@ -182,15 +173,64 @@ span {
 }
 
 .checkbox p {
-    transform: translate(0,5px);
+    transform: translate(0,8px);
     margin-left: 5px;
+}
+
+.checkbox p:hover {
+    text-shadow: 0 0 10px #fff;
+}
+
+.progress {
+    position: absolute;
+    left: 50vw;
+    bottom: 25px;
+    transform: translate(-50%, 0);
+}
+
+.startmenu {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: var(--bglight);
+    opacity: 0.9;
+    z-index: 2;
+}
+
+.startmenu h1 {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.startmenu button {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);    
+    max-width: 600px;
+    width: 60%;
+    height: 80px;
+}
+
+.hidden{
+    visibility: hidden;
 }
 
 @media screen and (max-width: 600px) {
     .wrapper{
         width: 95%
     }
-    
+
+    .question-box {
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 95%;
+    }
+
     button, p {
         transform: scale(1,1);
     }

@@ -1,11 +1,38 @@
-let c = document.getElementById('bgCanvas');
-let pen = c.getContext('2d');
+let c1 = document.getElementById('bgCanvas');
+let c2 = document.getElementById('bgCanvas2');
+let pen1 = c1.getContext('2d');
+let pen2 = c2.getContext('2d');
 let w = window.innerWidth;
 let h = window.innerHeight;
-c.style.imageRendering = "pixelated";
+let centerW = window.innerWidth / 2;
+let centerH = window.innerHeight / 2;
+//c.style.imageRendering = "pixelated";
 
-c.width = w;
-c.height = h;
+function setWH() {
+    centerW = window.innerWidth/2;
+    centerH = window.innerHeight/2
+    w = window.innerWidth;
+    h = window.innerHeight;
+    c1.width = w;
+    c1.height = h;
+    c2.width = w;
+    c2.height = h;    
+}
+
+setWH();
+
+
+
+let noOfStars = 500;
+let stars = [];
+
+function drawStars(){
+    stars = [];
+
+    for (let i = 0; i < noOfStars; i++) {
+        stars.push(new Star(2.5, w * Math.random(), h * Math.random()));
+    }
+}
 
 let mouse = {
     x: undefined,
@@ -17,6 +44,11 @@ window.addEventListener('mousemove', (e) => {
     mouse.y = e.y;
 });
 
+window.addEventListener('resize', () => {
+    setWH();
+    drawStars();
+})
+
 class Star {
     constructor(size, x, y) {
         let randomSize = size * Math.random() / 2;
@@ -25,13 +57,14 @@ class Star {
         } else {
             this.size = 0.2;
         }
+
         this.x = x;
         this.y = y;
-        this.velX = 1 * Math.random() - 0.5;
-        this.velY = 1 * Math.random() - 0.5;
         this.age = 100 * Math.random();
-        this.oscRate = 5 * Math.random();
-        this.oscPos = 0;
+        this.osc1Rate = 2 * Math.random();
+        this.osc2Rate = 2 * Math.random();
+        this.osc1Pos = 0;
+        this.osc2Pos = 0;
         this.oscMax = 1000;
         this.polarity = true;
         this.hasTrail = Math.random() > 0.98;
@@ -39,139 +72,114 @@ class Star {
         this.trail = [];
         this.trailInterval = 5;
         this.chromaticAbberation = Math.random();
-        if(this.hasTrail){
+        if (this.hasTrail) {
             this.size *= 2;
         }
+        this.velX = 1 * Math.random() - 0.5 * this.size;
+        this.velY = 1 * Math.random() - 0.5 * this.size;
     }
 
-    getSine() {
-        return Math.sin(Math.PI - this.oscPos / this.oscMax * Math.PI / 2);
+    getSine(pos) {
+        return Math.sin(Math.PI - pos / this.oscMax * Math.PI / 2);
     }
 
-    drawTrail() {
+    drawTrail(ctx) {
         for (let i = 1; i < this.trail.length; i++) {
-            pen.beginPath();
-            pen.arc(this.trail[i][0], this.trail[i][1], this.size / 2, 0, 2 * Math.PI);
-            pen.fillStyle = `rgba(255,255,255, ${1 * i / this.trail.length})`;
-            pen.fill();
+            ctx.beginPath();
+            ctx.arc(this.trail[i][0], this.trail[i][1], this.size / 2, 0, 2 * Math.PI);
+            ctx.fillStyle = `rgba(255,255,255, ${1 * i / this.trail.length})`;
+            ctx.fill();
         }
-        
+
     }
 
-    draw() {
-        /*pen.beginPath();
-        pen.arc(this.x - this.chromaticAbberation * this.getSine(), this.y - this.chromaticAbberation * this.getSine(), this.size, 0, 2 * Math.PI); 
-        pen.fillStyle = '#0000ff88';
-        pen.fill();
-
-        pen.beginPath();
-        pen.arc(this.x + this.chromaticAbberation, this.y + this.chromaticAbberation, this.size, 0, 2 * Math.PI); 
-        pen.fillStyle = '#ff000088';
-        pen.fill();*/
-
-        pen.beginPath();
-        pen.arc(this.x, this.y, this.size, 0, 2 * Math.PI);    
-        pen.fillStyle = `rgba(255,255,255, ${1})`;
-        pen.fill();
-        /*
-        
-        let first;
-        if(this.trail.length > 10){
-            first = this.trail[10];
-        } else {
-            first = this.trail[0];
-        }
-        let gradient = pen.createLinearGradient(this.x, this.y, first[0], first[1]);
-        gradient.addColorStop(0, "white");
-        gradient.addColorStop(1, "rgba(0,0,0,0)");
-        pen.moveTo(this.x, this.y);
-        pen.lineTo(first[0], first[1]);
-        pen.strokeStyle = gradient;
-        pen.stroke();*/
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(255,255,255, ${1})`;
+        ctx.fill();
     }
 }
 
-let stars = [];
-
-for (let i = 0; i < 600; i++) {
-    stars.push(new Star(2, w * Math.random(), h * Math.random()));
-}
-let flipflop = false;
+drawStars();
+let alternate = false;
 
 function loop() {
+    let pen;
     let start = 0;
     let end = 0;
-    if (!flipflop) {
-        flipflop = true;
+    if (!alternate) {
+        pen = pen1;
+        alternate = true;
         start = 0;
         end = stars.length / 2;
     } else {
-        flipflop = false;
+        pen = pen2;
+        alternate = false;
         start = stars.length / 2;
-        end = stars.length;
-        pen.clearRect(0, 0, c.width, c.height);
+        end = stars.length;                          
     }
 
-    w = window.innerWidth;
-    h = window.innerHeight;
-    c.width = w;
-    c.height = h;
-    pen.clearRect(0, 0, c.width, c.height);
+    pen.clearRect(0, 0, w, h);
 
-    for(let i = start; i < end; i++) {
-        if (stars[i].polarity) {
-            stars[i].oscPos += stars[i].oscRate;
-            if (stars[i].oscPos >= stars[i].oscMax) {
-                stars[i].polarity = false;
+    for (let i = start; i < end; i++) {
+
+        if (stars[i].osc1Polarity) {
+            stars[i].osc1Pos += stars[i].osc1Rate;
+            if (stars[i].osc1Pos >= stars[i].oscMax) {
+                stars[i].osc1Polarity = false;
             }
         } else {
-            stars[i].oscPos -= stars[i].oscRate;
-            if (stars[i].oscPos < 0) {
-                stars[i].polarity = true;
-            }
-        }
-        
-        if (stars[i].trailInterval >= 6) {
-            stars[i].trail.push([stars[i].x, stars[i].y]);
-            stars[i].trailInterval = 0;
-        } else {
-            stars[i].trailInterval++;
-            if (stars[i].trail.length > 15) {
-                stars[i].trail.splice(0, 1);
+            stars[i].osc1Pos -= stars[i].osc1Rate;
+            if (stars[i].osc1Pos < 0) {
+                stars[i].osc1Polarity = true;
             }
         }
 
-        stars[i].x += stars[i].velX * (Math.random()+ stars[i].getSine()) / 4;
-        if (stars[i].x >= c.width || stars[i].x < 0) {
+        if (stars[i].osc2Polarity) {
+            stars[i].osc2Pos += stars[i].osc2Rate;
+            if (stars[i].osc2Pos >= stars[i].oscMax) {
+                stars[i].osc2Polarity = false;
+            }
+        } else {
+            stars[i].osc2Pos -= stars[i].osc2Rate;
+            if (stars[i].osc2Pos < 0) {
+                stars[i].osc2Polarity = true;
+            }
+        }
+
+        stars[i].x += stars[i].velX * (0.5 - stars[i].getSine(stars[i].osc1Pos));
+        if (stars[i].x >= w || stars[i].x < 0) {
             stars[i].velX -= 2 * stars[i].velX;
         }
 
-        stars[i].y += stars[i].velY * (Math.random() + stars[i].getSine() / 4);
-        if (stars[i].y >= c.height || stars[i].y < 0) {
+        stars[i].y += stars[i].velY * (0.5 - stars[i].getSine(stars[i].osc2Pos));
+        if (stars[i].y >= h || stars[i].y < 0) {
             stars[i].velY -= 2 * stars[i].velY;
         }
 
-        if(stars[i].hasTrail) {
-            stars[i].drawTrail();
-            if(!stars[i].hasTrailSpeed){
-                stars[i].velY *= 4;
-                stars[i].velX *= 4;
-                stars[i].hasTrailSpeed = true; 
+        if (stars[i].hasTrail) {
+            if (stars[i].trailInterval >= 6) {
+                stars[i].trail.push([stars[i].x, stars[i].y]);
+                stars[i].trailInterval = 0;
+            } else {
+                stars[i].trailInterval++;
+                if (stars[i].trail.length > 15) {
+                    stars[i].trail.splice(0, 1);
+                }
             }
-            
+            stars[i].drawTrail(pen);
+            if (!stars[i].hasTrailSpeed) {
+                stars[i].velY *= 5;
+                stars[i].velX *= 5;
+                stars[i].hasTrailSpeed = true;
+            }
         }
-        pen.mozImageSmoothingEnabled = false;
-        pen.webkitImageSmoothingEnabled = false;
-        pen.msImageSmoothingEnabled = false;
-        pen.imageSmoothingEnabled = false;
 
-        stars[i].draw();
+        stars[i].draw(pen);
     }
 
-
-
     window.requestAnimationFrame(loop);
-
 }
 
 loop();

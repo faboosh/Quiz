@@ -21,7 +21,7 @@ function setWH() {
 //Sets width and height of canvas to browser window
 setWH();
 
-let noOfStars = 800;
+let noOfStars = 1200;
 let stars = [];
 
 function drawStars(number) {
@@ -34,7 +34,8 @@ function drawStars(number) {
 
 let mouse = {
     x: undefined,
-    y: undefined
+    y: undefined,
+    pressed: false
 };
 
 window.addEventListener('mousemove', (e) => {
@@ -45,14 +46,27 @@ window.addEventListener('mousemove', (e) => {
 window.addEventListener('resize', () => {
     setWH();
     drawStars(noOfStars);
-})
+});
+
+window.addEventListener('mousedown', () => {
+    mouse.pressed = true;
+    console.log(mouse.pressed);
+});
+
+window.addEventListener('mouseup', () => {
+    mouse.pressed = false;
+    console.log(mouse.pressed);
+});
 
 class SpaceShip {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.velX = 3;
+        this.velX = 4;
         this.velY = -1;
+        this.curve = 0;
+        this.ticksUntilSpawn = 0;
+        this.chanceOfSpawn = Math.random() * 1000;
         this.paused = true;
         this.img = new Image();
         this.img.onload = () => {
@@ -77,10 +91,10 @@ class GravityWell {
 class Star {
     constructor(size, x, y) {
         let randomSize = size * Math.random() / 2;
-        if (randomSize >= 0.2) {
+        if (randomSize >= 0.3) {
             this.size = randomSize;
         } else {
-            this.size = 0.2;
+            this.size = 0.3;
         }
 
         this.x = x;
@@ -92,7 +106,7 @@ class Star {
         this.osc2Pos = 0;
         this.oscMax = 1000;
         this.polarity = true;
-        this.hasTrail = Math.random() > 0.98;
+        this.hasTrail = Math.random() > 0.99;
         this.hasTrailSpeed = false;
         this.trail = [];
         this.trailInterval = 5;
@@ -173,6 +187,17 @@ function loop() {
             }
         }
 
+        /*if(mouse.pressed) {
+            let dX = mouse.x - stars[i].x;
+            let dY = mouse.y - stars[i].y;
+            let radius = 50;
+            if((dY < radius && dY > -radius) && (dX < radius && dX > -radius)) {
+                stars[i].accelX = dX * 0.1;
+                stars[i].accelY = dY * 0.1;
+                stars[i].accelerated = true;
+            }
+        }*/
+
         stars[i].x += stars[i].velX * (0.5 - stars[i].getSine(stars[i].osc1Pos));
         if (stars[i].x >= w || stars[i].x < 0) {
             stars[i].velX -= 2 * stars[i].velX;
@@ -204,19 +229,24 @@ function loop() {
         stars[i].draw(pen);
     }
 
-    if (Math.random() > 0.999) {
+    ship.ticksUntilSpawn++;
+
+    if (ship.ticksUntilSpawn > ship.chanceOfSpawn) {
         ship.paused = false;
     }
 
     if(!ship.paused){
         if (ship.x > w) {
+            ship.chanceOfSpawn = Math.random() * 1000;
+            ship.ticksUntilSpawn = 0;
+            ship.curve = (Math.random() - 0.5) * 5;
             ship.y = h * Math.random();
             ship.velY = Math.random() - 0.5;
             ship.x = -100;
-            ship.paused = true;;
-        } else {
-            //ship.y += ship.velY;
+            ship.paused = true;
+        } else {  
             ship.x += ship.velX;
+            ship.y += Math.sin(ship.x / ship.curve / 50);
         }
     
         ship.draw(pen);

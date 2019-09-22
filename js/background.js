@@ -1,7 +1,9 @@
 let c = document.getElementById('bgCanvas');
 let pen = c.getContext('2d');
-let w = window.innerWidth;
-let h = window.innerHeight;
+let w = window.innerWidth / 4;
+let h = window.innerHeight / 4;
+c.style.imageRendering = "pixelated";
+
 c.width = w;
 c.height = h;
 
@@ -18,10 +20,10 @@ window.addEventListener('mousemove', (e) => {
 class Star {
     constructor(size, x, y) {
         let randomSize = size * Math.random() / 2;
-        if (randomSize >= 0.2) {
+        if (randomSize >= 0.1) {
             this.size = randomSize;
         } else {
-            this.size = 0.2;
+            this.size = 0.1;
         }
         this.x = x;
         this.y = y;
@@ -68,7 +70,7 @@ class Star {
         pen.fill();*/
 
         pen.beginPath();
-        pen.arc(this.x, this.y, this.size , 0, 2 * Math.PI);    
+        pen.arc(this.x, this.y, this.size, 0, 2 * Math.PI);    
         pen.fillStyle = `rgba(255,255,255, ${1})`;
         pen.fill();
         /*
@@ -91,13 +93,14 @@ class Star {
 
 let stars = [];
 
-for (let i = 0; i < 300; i++) {
-    stars.push(new Star(3, w * Math.random(), h * Math.random()));
+for (let i = 0; i < 150; i++) {
+    stars.push(new Star(1, w * Math.random(), h * Math.random()));
 }
 
 function loop() {
-    w = window.innerWidth;
-    h = window.innerHeight;
+    
+    w = window.innerWidth / 4;
+    h = window.innerHeight / 4;
     c.width = w;
     c.height = h;
     pen.clearRect(0, 0, c.width, c.height);
@@ -147,6 +150,10 @@ function loop() {
             }
             
         }
+        pen.mozImageSmoothingEnabled = false;
+        pen.webkitImageSmoothingEnabled = false;
+        pen.msImageSmoothingEnabled = false;
+        pen.imageSmoothingEnabled = false;
 
         star.draw();
     })

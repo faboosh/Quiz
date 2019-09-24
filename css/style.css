@@ -62,7 +62,7 @@ label {
 
 .question-box {
     position: absolute;
-    top: 80%;
+    top: 70%;
     left: 50%;
     transform: translate(-50%, -90%);
     margin-top: 20px;
@@ -214,11 +214,17 @@ span {
     max-width: 600px;
     width: 60%;
     height: 80px;
+    z-index: 1;
 }
 
 .hidden{
     opacity: 0;
     visibility: hidden;
+}
+
+#nextQuestion{
+    
+    width: 100%;
 }
 
 @media screen and (max-width: 600px) {
@@ -246,13 +252,15 @@ span {
     }
 }
 
-@media screen and (max-height: 600px) {
+@media screen and (max-height: 700px) {
     .question-box {
-        top:80%;
-        height: 0;
+        bottom:100px;
+        min-height: 350px;
+        max-width: 525px;
     }
 
     h1 {
         bottom: 20px;
+        transform: rotateX(10deg) scale(1.1, 1.3);
     }
 }

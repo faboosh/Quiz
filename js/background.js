@@ -7,6 +7,7 @@ let h = window.innerHeight;
 let centerW = window.innerWidth / 2;
 let centerH = window.innerHeight / 2;
 
+//Justerar canvasens storlek till fönstrets storlek
 function setWH() {
     centerW = window.innerWidth / 2;
     centerH = window.innerHeight / 2
@@ -18,15 +19,51 @@ function setWH() {
     c2.height = h;
 }
 
-//Sets width and height of canvas to browser window
+//Justerar canvasens storlek till fönstrets storlek
 setWH();
 
-let noOfStars = 800;
+//Definierar och lagrar grafikinställningar
+let gfxConf = {
+    settings: [{
+            //high
+            title: "high",
+            stars: 2000,
+            ship: true
+        },
+        {
+            //medium
+            title: "medium",
+            stars: 1200,
+            ship: true
+        },
+        {
+            //low
+            title: "low",
+            stars: 800,
+            ship: false
+        },
+        {
+            //ultralow
+            title: "ultra low",
+            stars: 200,
+            ship: false
+        }
+    ],
+    current: 3
+};
+
+
+//Lagrar alla stjärnor
 let stars = [];
 
-function drawStars(number) {
+//Tar bort alla stjärnor och renderar nya
+function redrawStars(number) {
     stars = [];
+    drawStars(number);
+}
 
+//Ritar ett specificerat antal stjärnor
+function drawStars(number) {
     for (let i = 0; i < number; i++) {
         stars.push(new Star(2.5, w * Math.random(), h * Math.random()));
     }
@@ -40,32 +77,12 @@ let mouse = {
 window.addEventListener('mousemove', (e) => {
     mouse.x = e.x;
     mouse.y = e.y;
-    console.log(mouse);
 });
 
 window.addEventListener('resize', () => {
     setWH();
-    drawStars(noOfStars);
+    redrawStars(gfxConf.settings[gfxConf.current].stars);
 })
-
-class SpaceShip {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.velX = 3;
-        this.velY = -1;
-        this.paused = true;
-        this.img = new Image();
-        this.img.onload = () => {
-
-        }
-        this.img.src = 'img/spaceship.png';
-    }
-
-    draw(ctx) {
-        ctx.drawImage(this.img, this.x, this.y, this.img.width, this.img.height);
-    }
-}
 
 let ship = new SpaceShip(0, h * Math.random());
 
@@ -75,62 +92,22 @@ class GravityWell {
     }
 }
 
-class Star {
-    constructor(size, x, y) {
-        let randomSize = size * Math.random() / 2;
-        if (randomSize >= 0.2) {
-            this.size = randomSize;
-        } else {
-            this.size = 0.2;
-        }
+//Renderar första stjärnorna
+redrawStars(gfxConf.settings[gfxConf.current].stars);
 
-        this.x = x;
-        this.y = y;
-        this.age = 100 * Math.random();
-        this.osc1Rate = 2 * Math.random();
-        this.osc2Rate = 2 * Math.random();
-        this.osc1Pos = 0;
-        this.osc2Pos = 0;
-        this.oscMax = 1000;
-        this.polarity = true;
-        this.hasTrail = Math.random() > 0.98;
-        this.hasTrailSpeed = false;
-        this.trail = [];
-        this.trailInterval = 5;
-        this.chromaticAbberation = Math.random();
-        if (this.hasTrail) {
-            this.size *= 2;
-        }
-        this.velX = 1 * Math.random() - 0.5 * this.size;
-        this.velY = 1 * Math.random() - 0.5 * this.size;
-    }
-
-    getSine(pos) {
-        return Math.sin(Math.PI - pos / this.oscMax * Math.PI / 2);
-    }
-
-    drawTrail(ctx) {
-        for (let i = 1; i < this.trail.length; i++) {
-            ctx.beginPath();
-            ctx.arc(this.trail[i][0], this.trail[i][1], this.size / 2, 0, 2 * Math.PI);
-            ctx.fillStyle = `rgba(255,255,255, ${1 * i / this.trail.length})`;
-            ctx.fill();
-        }
-
-    }
-
-    draw(ctx) {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-        ctx.fillStyle = `rgba(255,255,255, ${1})`;
-        ctx.fill();
-    }
-}
-
-drawStars(noOfStars);
 let alternate = false;
+let starttime = 0;
+let endtime = 0;
+let frametime = 0;
+let ticksUntilOptimize = 0;
+let optimizeInterval = 60;
 
+//Renderar stjärnorna och alla andra bakgrundselement.
 function loop() {
+    //Registrerar tidpunkten vid bildrutans början
+    starttime = performance.now();
+
+    //Stjärnorna delas upp i 2 grupper. 
     let pen;
     let start = 0;
     let end = 0;
@@ -150,39 +127,13 @@ function loop() {
 
     for (let i = start; i < end; i++) {
 
-        if (stars[i].osc1Polarity) {
-            stars[i].osc1Pos += stars[i].osc1Rate;
-            if (stars[i].osc1Pos >= stars[i].oscMax) {
-                stars[i].osc1Polarity = false;
-            }
-        } else {
-            stars[i].osc1Pos -= stars[i].osc1Rate;
-            if (stars[i].osc1Pos < 0) {
-                stars[i].osc1Polarity = true;
-            }
-        }
+        //Beräknar stjärnans båda oscillatorers position
+        stars[i].calcOsc();
 
-        if (stars[i].osc2Polarity) {
-            stars[i].osc2Pos += stars[i].osc2Rate;
-            if (stars[i].osc2Pos >= stars[i].oscMax) {
-                stars[i].osc2Polarity = false;
-            }
-        } else {
-            stars[i].osc2Pos -= stars[i].osc2Rate;
-            if (stars[i].osc2Pos < 0) {
-                stars[i].osc2Polarity = true;
-            }
-        }
+        //Beräknar stjärnans nya position utifrån velX, velY och osillatorernas position
+        stars[i].calcPos();
 
-        stars[i].x += stars[i].velX * (0.5 - stars[i].getSine(stars[i].osc1Pos));
-        if (stars[i].x >= w || stars[i].x < 0) {
-            stars[i].velX -= 2 * stars[i].velX;
-        }
-        stars[i].y += stars[i].velY * (0.5 - stars[i].getSine(stars[i].osc2Pos));
-        if (stars[i].y >= h || stars[i].y < 0) {
-            stars[i].velY -= 2 * stars[i].velY;
-        }
-
+        //Ritar stjärnans svans ifall den har en
         if (stars[i].hasTrail) {
             if (stars[i].trailInterval >= 6) {
                 stars[i].trail.push([stars[i].x, stars[i].y]);
@@ -204,22 +155,33 @@ function loop() {
         stars[i].draw(pen);
     }
 
-    if (Math.random() > 0.999) {
-        ship.paused = false;
+    //Renderar skepp ifall grafikinställningarna tillåter det
+    if (gfxConf.settings[gfxConf.current].ship) {
+        ship.attemptFlight(pen);
     }
 
-    if(!ship.paused){
-        if (ship.x > w) {
-            ship.y = h * Math.random();
-            ship.velY = Math.random() - 0.5;
-            ship.x = -100;
-            ship.paused = true;;
-        } else {
-            //ship.y += ship.velY;
-            ship.x += ship.velX;
+    //Röknar hur lång tid som är kvar till nästa optimering
+    ticksUntilOptimize++;
+    //Registrerar tidpunkten vid bildrutans slut
+    endtime = performance.now();
+    //Räknar ut hur lång bildrutan var och lagrar det i frametime
+    frametime += endtime - starttime;
+
+    //Ändrar grafikinställningar utifrån gfxConf baserat på snitt-frametime senaste sekunden
+    if (ticksUntilOptimize >= optimizeInterval) {
+        console.log('optimized');
+        ticksUntilOptimize = 0;
+        console.log(frametime / optimizeInterval + ' ms');
+        if ((frametime / optimizeInterval) > 10 && (gfxConf.current + 1) <= gfxConf.settings.length) {
+            gfxConf.current++;
+            console.log('config changed to ' + gfxConf.settings[gfxConf.current].title);
+            redrawStars(gfxConf.settings[gfxConf.current].stars);
+        } else if ((frametime / optimizeInterval) < 5 && gfxConf.current != 0) {
+            gfxConf.current--;
+            console.log('config changed to ' + gfxConf.settings[gfxConf.current].title);
+            redrawStars(gfxConf.settings[gfxConf.current].stars);
         }
-    
-        ship.draw(pen);
+        frametime = 0;
     }
 
     window.requestAnimationFrame(loop);

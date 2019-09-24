@@ -1,4 +1,4 @@
-class Quiz{
+class Player {
     constructor(name) {
         //
         this.name = name || '';
@@ -9,7 +9,7 @@ class Quiz{
     }
 }
 
-class Question {
+class Quiz {
     constructor() { 
         this.player = [];
         //objekt som håller nuvarande laddade frågor
@@ -112,8 +112,8 @@ class Question {
     }
 }
 
-const q = new Question();
-q.player.push(new Quiz('Fabian'));
+const q = new Quiz();
+q.player.push(new Player('Fabian'));
 
 function startGame() {
     document.getElementById('question-box').classList.remove('hidden');
@@ -128,6 +128,7 @@ document.getElementById('startButton').addEventListener('click',
     setTimeout(() => {document.getElementById('question-box').classList.remove('hidden')}, 500); 
     q.load();
 });
+
 
 
 

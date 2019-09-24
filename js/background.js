@@ -22,35 +22,15 @@ function setWH() {
 //Justerar canvasens storlek till fönstrets storlek
 setWH();
 
+let gfxConf;
+
 //Definierar och lagrar grafikinställningar
-let gfxConf = {
-    settings: [{
-            //high
-            title: "high",
-            stars: 2000,
-            ship: true
-        },
-        {
-            //medium
-            title: "medium",
-            stars: 1200,
-            ship: true
-        },
-        {
-            //low
-            title: "low",
-            stars: 800,
-            ship: false
-        },
-        {
-            //ultralow
-            title: "ultra low",
-            stars: 200,
-            ship: false
-        }
-    ],
-    current: 3
-};
+async function getConf() {
+    gfxConf = await new FetchJson().fetch('config/graphics.json');
+    redrawStars(gfxConf.presets[gfxConf.current].stars);
+}
+
+getConf();
 
 //Lagrar alla stjärnor
 let stars = [];
@@ -68,7 +48,7 @@ function drawStars(number) {
     }
 }
 
-let mouse = {
+/*let mouse = {
     x: undefined,
     y: undefined
 };
@@ -76,11 +56,13 @@ let mouse = {
 window.addEventListener('mousemove', (e) => {
     mouse.x = e.x;
     mouse.y = e.y;
-});
+});*/
 
+
+//Anpassar canvasens storlek och renderar om alla stjärnor när fönstret ändrar storlek
 window.addEventListener('resize', () => {
     setWH();
-    redrawStars(gfxConf.settings[gfxConf.current].stars);
+    redrawStars(gfxConf.presets[gfxConf.current].stars);
 })
 
 //Skapar skeppet
@@ -94,16 +76,21 @@ class GravityWell {
 }
 
 //Renderar första stjärnorna utifrån grafikconfig
-redrawStars(gfxConf.settings[gfxConf.current].stars);
 
-let alternate = false;
+
 let starttime = 0;
 let endtime = 0;
 let frametime = 0;
+
+//håller reda på antalet bildrutor sedan senaste optimering
 let ticksUntilOptimize = 0;
-let optimizeInterval = 60;
+
+//Antalet bildrutor mellan varje optimering
+let optimizeInterval = 30;
 
 //Renderar stjärnorna och alla andra bakgrundselement.
+let alternate = false;
+
 function loop() {
     //Registrerar tidpunkten vid bildrutans början
     starttime = performance.now();
@@ -126,6 +113,7 @@ function loop() {
 
     pen.clearRect(0, 0, w, h);
 
+    //Renderar stjärnorna
     for (let i = start; i < end; i++) {
 
         //Beräknar stjärnans båda oscillatorers position
@@ -155,37 +143,49 @@ function loop() {
         stars[i].draw(pen);
     }
 
-    //Renderar skepp ifall grafikinställningarna tillåter det
-    if (gfxConf.settings[gfxConf.current].ship) {
+    //Renderar skeppet ifall grafikinställningarna tillåter det och 
+    if (gfxConf.presets[gfxConf.current].ship) {
         ship.attemptFlight(pen);
     }
 
-    //Röknar hur lång tid som är kvar till nästa optimering
-    ticksUntilOptimize++;
+    if (gfxConf.dynamicRendering) {
+        //Räknar hur lång tid som är kvar till nästa optimering
+        ticksUntilOptimize++;
 
-    //Registrerar tidpunkten vid bildrutans slut
-    endtime = performance.now();
+        //Registrerar tidpunkten vid bildrutans slut
+        endtime = performance.now();
 
-    //Räknar ut hur lång bildrutan var och lagrar det i frametime
-    frametime += endtime - starttime;
+        //Räknar ut hur lång bildrutan var och lagrar det i frametime
+        frametime += endtime - starttime;
 
-    //Ändrar grafikinställningar utifrån gfxConf baserat på snitt-frametime senaste sekunden
-    if (ticksUntilOptimize >= optimizeInterval) {
-        console.log('optimized');
-        ticksUntilOptimize = 0;
-        console.log(frametime / optimizeInterval + ' ms');
-        if ((frametime / optimizeInterval) > 2 && (gfxConf.current + 1) < gfxConf.settings.length) {
-            gfxConf.current++;
-            console.log('config changed to ' + gfxConf.settings[gfxConf.current].title);
-            redrawStars(gfxConf.settings[gfxConf.current].stars);
-        } else if ((frametime / optimizeInterval) < 2 && gfxConf.current != 0) {
-            gfxConf.current--;
-            console.log('config changed to ' + gfxConf.settings[gfxConf.current].title);
-            redrawStars(gfxConf.settings[gfxConf.current].stars);
+        //Ändrar grafikinställningar utifrån gfxConf baserat på snitt-frametime senaste sekunden
+        if (ticksUntilOptimize >= optimizeInterval) {
+            ticksUntilOptimize = 0;
+            //console.log(frametime / optimizeInterval + ' ms');
+            if ((frametime / optimizeInterval) > gfxConf.maxFrameTime && (gfxConf.current + 1) < gfxConf.presets.length) {
+                gfxConf.current++;
+                console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
+                redrawStars(gfxConf.presets[gfxConf.current].stars);
+            } else if ((frametime / optimizeInterval) < gfxConf.minFrameTime && gfxConf.current != 0) {
+                gfxConf.current--;
+                console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
+                redrawStars(gfxConf.presets[gfxConf.current].stars);
+            }
+            frametime = 0;
         }
-        frametime = 0;
     }
-    window.requestAnimationFrame(loop);
+
+    window.requestAnimationFrame(() => {
+        setTimeout(() => {
+            loop();
+        }, 0);
+    });
+
+
+
 }
 
-loop();
+//Starta animationen :D
+setTimeout(() => {
+    loop();
+}, 0);

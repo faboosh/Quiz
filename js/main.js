@@ -99,8 +99,8 @@ class Quiz {
 
     //Laddar in frågorna från en JSON-fil och parsear dem till objektet 'questions'
     async load() {
-        let fetcher = new QuestionFetcher();
-        this.questions = await fetcher.fetch();
+        this.questions = await new FetchJson().fetch('config/questions.json');
+        this.questions = this.questions.questions;
 
         //Sätter nuvarande fråga till första frågan i 'questions' och renderar den i dokumentet
         this.set(this.questions[0]);

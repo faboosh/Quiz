@@ -52,7 +52,6 @@ let gfxConf = {
     current: 3
 };
 
-
 //Lagrar alla stjärnor
 let stars = [];
 
@@ -84,15 +83,17 @@ window.addEventListener('resize', () => {
     redrawStars(gfxConf.settings[gfxConf.current].stars);
 })
 
+//Skapar skeppet
 let ship = new SpaceShip(0, h * Math.random());
 
 class GravityWell {
-    constructor() {
-
+    constructor(size, push) {
+        this.size = size;
+        this.push = push;
     }
 }
 
-//Renderar första stjärnorna
+//Renderar första stjärnorna utifrån grafikconfig
 redrawStars(gfxConf.settings[gfxConf.current].stars);
 
 let alternate = false;
@@ -151,7 +152,6 @@ function loop() {
                 stars[i].hasTrailSpeed = true;
             }
         }
-
         stars[i].draw(pen);
     }
 
@@ -162,8 +162,10 @@ function loop() {
 
     //Röknar hur lång tid som är kvar till nästa optimering
     ticksUntilOptimize++;
+
     //Registrerar tidpunkten vid bildrutans slut
     endtime = performance.now();
+
     //Räknar ut hur lång bildrutan var och lagrar det i frametime
     frametime += endtime - starttime;
 
@@ -172,18 +174,17 @@ function loop() {
         console.log('optimized');
         ticksUntilOptimize = 0;
         console.log(frametime / optimizeInterval + ' ms');
-        if ((frametime / optimizeInterval) > 10 && (gfxConf.current + 1) <= gfxConf.settings.length) {
+        if ((frametime / optimizeInterval) > 2 && (gfxConf.current + 1) < gfxConf.settings.length) {
             gfxConf.current++;
             console.log('config changed to ' + gfxConf.settings[gfxConf.current].title);
             redrawStars(gfxConf.settings[gfxConf.current].stars);
-        } else if ((frametime / optimizeInterval) < 5 && gfxConf.current != 0) {
+        } else if ((frametime / optimizeInterval) < 2 && gfxConf.current != 0) {
             gfxConf.current--;
             console.log('config changed to ' + gfxConf.settings[gfxConf.current].title);
             redrawStars(gfxConf.settings[gfxConf.current].stars);
         }
         frametime = 0;
     }
-
     window.requestAnimationFrame(loop);
 }
 

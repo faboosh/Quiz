@@ -175,17 +175,12 @@ function loop() {
         }
 
         stars[i].x += stars[i].velX * (0.5 - stars[i].getSine(stars[i].osc1Pos));
-        if (stars[i].x - 2 < 0) {
-            stars[i].x = w;
-        } else if (stars[i].x >= w) {
-            stars[i].x = 0;
+        if (stars[i].x >= w || stars[i].x < 0) {
+            stars[i].velX -= 2 * stars[i].velX;
         }
-
         stars[i].y += stars[i].velY * (0.5 - stars[i].getSine(stars[i].osc2Pos));
-        if (stars[i].y - 2 < 0) {
-            stars[i].y = h;
-        } else if (stars[i].y >= h) {
-            stars[i].y = 0;
+        if (stars[i].y >= h || stars[i].y < 0) {
+            stars[i].velY -= 2 * stars[i].velY;
         }
 
         if (stars[i].hasTrail) {

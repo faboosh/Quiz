@@ -22,9 +22,9 @@ function setWH() {
 //Justerar canvasens storlek till fönstrets storlek
 setWH();
 
+//Hämtar och och lagrar grafikinställningar
 let gfxConf;
 
-//Definierar och lagrar grafikinställningar
 async function getConf() {
     gfxConf = await new FetchJson().fetch('config/graphics.json');
     redrawStars(gfxConf.presets[gfxConf.current].stars);
@@ -44,7 +44,7 @@ function redrawStars(number) {
 //Ritar ett specificerat antal stjärnor
 function drawStars(number) {
     for (let i = 0; i < number; i++) {
-        stars.push(new Star(2.5, w * Math.random(), h * Math.random()));
+        stars.push(new Star(1.5, w * Math.random(), h * Math.random()));
     }
 }
 
@@ -58,13 +58,6 @@ window.addEventListener('mousemove', (e) => {
     mouse.y = e.y;
 });*/
 
-
-//Anpassar canvasens storlek och renderar om alla stjärnor när fönstret ändrar storlek
-window.addEventListener('resize', () => {
-    setWH();
-    redrawStars(gfxConf.presets[gfxConf.current].stars);
-})
-
 //Skapar skeppet
 let ship = new SpaceShip(0, h * Math.random());
 
@@ -75,9 +68,6 @@ class GravityWell {
     }
 }
 
-//Renderar första stjärnorna utifrån grafikconfig
-
-
 let starttime = 0;
 let endtime = 0;
 let frametime = 0;
@@ -86,7 +76,7 @@ let frametime = 0;
 let ticksUntilOptimize = 0;
 
 //Antalet bildrutor mellan varje optimering
-let optimizeInterval = 30;
+let optimizeInterval = 60;
 
 //Renderar stjärnorna och alla andra bakgrundselement.
 let alternate = false;
@@ -180,12 +170,4 @@ function loop() {
             loop();
         }, 0);
     });
-
-
-
 }
-
-//Starta animationen :D
-setTimeout(() => {
-    loop();
-}, 0);

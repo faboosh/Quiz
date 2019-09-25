@@ -16,7 +16,7 @@ class Star {
         this.osc2Pos = 0;
         this.oscMax = 1000;
         this.polarity = true;
-        this.hasTrail = Math.random() > 0.995;
+        this.hasTrail = Math.random() > 0.99;
         this.hasTrailSpeed = false;
         this.trail = [];
         this.trailInterval = 5;
@@ -28,7 +28,7 @@ class Star {
         this.velY = (1 * Math.random() - 0.5 * this.size) / 3;
     }
 
-    //Räknar ut sinusmotsvarigheten till oscillatorns position
+    //Räknar ut sinusmotsvarigheten???? <--(probably inte ett ord) till oscillatorns position
     getSine(pos) {
         return Math.sin(Math.PI - pos / this.oscMax * Math.PI / 2);
     }
@@ -51,7 +51,6 @@ class Star {
         ctx.fillStyle = `rgba(255,255,255, ${1})`;
         ctx.fill();
     }
-
 
     calcOsc() {
         if (this.osc1Polarity) {

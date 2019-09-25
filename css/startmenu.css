@@ -1,0 +1,66 @@
+.startmenu {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: var(--bglight);
+    opacity: 0.9;
+    z-index: 2;
+}
+
+.startmenu h1 {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.startmenu button {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);    
+    max-width: 600px;
+    width: 60%;
+    height: 80px;
+    z-index: 1;
+}
+
+#title {
+    top: 20%;
+    width: 100%;
+    text-align: center;
+}
+
+#name {
+    z-index: 4;
+    position: absolute;
+    left: 50%;
+    top: 35%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+}
+
+#name p {
+    padding-bottom: 20px;
+    text-align: center;
+    width: calc(100% - 40px);
+    padding: 20px;
+}
+
+#name input {
+    color: var(--highlight);
+    padding: 10px;
+    background: var(--highmid);
+    border: none;
+    height: 30px;
+    width: 40%;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -0%);
+}
+
+#name input:focus {
+    border: none;
+}

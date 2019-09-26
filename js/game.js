@@ -9,9 +9,12 @@ document.getElementById('startButton').addEventListener('click',
         q.load();
 
         //Starta animationen :D
-        setTimeout(() => {
+        
+        /*setTimeout(() => {
             loop();
-        }, 0);
+        }, 0);*/
+
+        //triggerWorker();
         
         //Anpassar canvasens storlek och renderar om alla stjärnor när fönstret ändrar storlek
         window.addEventListener('resize', () => {
@@ -20,7 +23,21 @@ document.getElementById('startButton').addEventListener('click',
         })
 
         q.player[0].name = document.getElementById('name').getElementsByTagName('input')[0].value;
-    })
+})
+
+let c = document.getElementById('bgCanvas');
+let bitmap = c.getContext('bitmaprenderer');
+let o = new OffscreenCanvas(c.width, c.height);
+
+let worker = new Worker('js/bgworker.js');
+worker.postMessage({canvas: o},[o]);
+
+window.addEventListener('message', (e) => {
+    if(e.data.msg == 'render') {
+        bitmap.transferFromImageBitmap(e.data.bitmap);
+    }
+});
+
 
 
 

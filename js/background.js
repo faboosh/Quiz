@@ -164,9 +164,5 @@ function loop() {
         }
     }
 
-    window.requestAnimationFrame(() => {
-        setTimeout(() => {
-            loop();
-        }, 0);
-    });
+    window.requestAnimationFrame(loop);
 }

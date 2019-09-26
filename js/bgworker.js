@@ -117,7 +117,7 @@ let pen;
 let currentFrame;
 let averageFrametime = 0;
 let frameCounter = 0;
-let samplingInterval = 30;
+let samplingInterval = 300;
 
 function animate() {
     currentFrame = self.requestAnimationFrame(animate);

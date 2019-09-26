@@ -26,7 +26,7 @@
     ],
     "current": 0,
     "minFrameTime": 35,
-    "maxFrameTime": 43,
-    "maxFPS": 60,
-    "dynamicRendering": false
+    "maxFrameTime": 50,
+    "maxFPS": 30,
+    "dynamicRendering": true
 }

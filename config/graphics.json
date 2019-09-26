@@ -34,7 +34,7 @@
     "current": 0,
     "minFrameTime": 35,
     "maxFrameTime": 50,
-    "maxFPS": 30,
+    "maxFPS": 36,
     "dynamicRendering": true,
     "logFrametime": true
 }

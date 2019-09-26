@@ -140,7 +140,7 @@ function animate() {
                     redrawStars(gfxConf.presets[gfxConf.current].stars);
                 }
                 if (gfxConf.logFrametime){
-                    console.log('Frametime: ' + Math.round(averageFrametime / frameCounter) + 'ms \n FPS:' + 1000/Math.round(averageFrametime / frameCounter));
+                    console.log('Frametime: ' + Math.round(averageFrametime / frameCounter) + 'ms \n FPS:' + Math.round(1000/Math.round(averageFrametime / frameCounter)));
                 }    
                 frameCounter = 0;
                 averageFrametime = 0;

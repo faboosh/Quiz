@@ -80,7 +80,6 @@ let optimizeInterval = 60;
 
 //Renderar stjärnorna och alla andra bakgrundselement.
 let alternate = false;
-
 function loop() {
     //Registrerar tidpunkten vid bildrutans början
     starttime = performance.now();

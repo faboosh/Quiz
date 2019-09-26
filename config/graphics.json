@@ -1,5 +1,12 @@
 {
-    "presets": [{
+    "presets": [
+        {
+            "title": "ultra",
+            "stars": 5000,
+            "ship": true,
+            "freezeOnTransition": false
+        },
+        {
             "title": "high",
             "stars": 2500,
             "ship": true,
@@ -28,5 +35,6 @@
     "minFrameTime": 35,
     "maxFrameTime": 50,
     "maxFPS": 30,
-    "dynamicRendering": true
+    "dynamicRendering": true,
+    "logFrametime": true
 }

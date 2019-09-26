@@ -87,11 +87,10 @@ span {
     transition: all 0.5s;
     background: linear-gradient(var(--bglight), var(--bglight), var(--bglight), var(--bglight), var(--bglight));;
     cursor: pointer;
-  }
+}
 
 .checkbox > input:checked {
     background: linear-gradient(#fff, #fff, #fff, #fff, #fff);
-
 }
 
 .checkbox > input:active {

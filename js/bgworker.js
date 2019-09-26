@@ -16,7 +16,7 @@ class Star {
         this.osc2Pos = 0;
         this.oscMax = 1000;
         this.polarity = true;
-        this.hasTrail = Math.random() > 0.99;
+        this.hasTrail = Math.random() > 0.995;
         this.hasTrailSpeed = false;
         this.trail = [];
         this.trailInterval = 5;
@@ -41,7 +41,6 @@ class Star {
             ctx.fillStyle = `rgba(255,255,255, ${1 * i / this.trail.length})`;
             ctx.fill();
         }
-
     }
 
     //Ritar stjärnan
@@ -89,7 +88,6 @@ class Star {
     }
 }
 
-
 let stars = [];
 
 //Tar bort alla stjärnor och renderar nya
@@ -117,7 +115,7 @@ let pen;
 let currentFrame;
 let averageFrametime = 0;
 let frameCounter = 0;
-let samplingInterval = 300;
+let samplingInterval = 150;
 
 function animate() {
     currentFrame = self.requestAnimationFrame(animate);
@@ -125,14 +123,13 @@ function animate() {
     frametime = now - then;
 
     if (frametime > interval) {
-
         then = now - (frametime % interval);
         if(gfxConf.dynamicRendering) {
             frameCounter++
-            if (frameCounter <= samplingInterval) {
+            if (frameCounter < samplingInterval) {
                 averageFrametime += frametime;
             } else {
-    
+
                 if ((averageFrametime / frameCounter) > gfxConf.maxFrameTime && (gfxConf.current + 1) < gfxConf.presets.length) {
                     gfxConf.current++;
                     console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
@@ -142,14 +139,14 @@ function animate() {
                     console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
                     redrawStars(gfxConf.presets[gfxConf.current].stars);
                 }
-                //console.log(averageFrametime / frameCounter + 'ms');
+                if (gfxConf.logFrametime){
+                    console.log('Frametime: ' + Math.round(averageFrametime / frameCounter) + 'ms');
+                }    
                 frameCounter = 0;
                 averageFrametime = 0;
             }
-    
         }
 
-        //console.log('animated');
         pen.clearRect(0, 0, w, h);
 
         //Renderar stjärnorna
@@ -179,11 +176,12 @@ function animate() {
                     stars[i].hasTrailSpeed = true;
                 }
             }
-            stars[i].draw(pen);
 
+            stars[i].draw(pen);
         }
     }
 }
+
 self.onmessage = (e) => {
     if (e.data.msg == 'init') {
         c = e.data.canvas;

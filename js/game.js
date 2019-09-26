@@ -8,37 +8,49 @@ document.getElementById('startButton').addEventListener('click',
         setTimeout(() => { document.getElementById('question-box').classList.remove('hidden') }, 500);
         q.load();
 
-        //Starta animationen :D
-        
-        /*setTimeout(() => {
-            loop();
-        }, 0);*/
-
-        //triggerWorker();
-        
         //Anpassar canvasens storlek och renderar om alla stjärnor när fönstret ändrar storlek
         window.addEventListener('resize', () => {
-            setWH();
-            redrawStars(gfxConf.presets[gfxConf.current].stars);
+            console.log('resized');
+            w = window.innerWidth;
+            h = window.innerHeight;
+            worker.postMessage({msg: 'resize', h: h, w: w});
         })
 
         q.player[0].name = document.getElementById('name').getElementsByTagName('input')[0].value;
-})
+    })
 
 let c = document.getElementById('bgCanvas');
-let bitmap = c.getContext('bitmaprenderer');
-let o = new OffscreenCanvas(c.width, c.height);
+c.height = window.innerHeight;
+c.width = window.innerWidth;
+let o = c.transferControlToOffscreen();
+
+let w = window.innerWidth;
+let h = window.innerHeight;
 
 let worker = new Worker('js/bgworker.js');
-worker.postMessage({canvas: o},[o]);
 
-window.addEventListener('message', (e) => {
-    if(e.data.msg == 'render') {
+async function startWorker() {
+    new Promise((resolve, reject) => {
+        resolve(new FetchJson().fetch('config/graphics.json'));
+    }).then((gfxConf) => {
+        worker.postMessage(
+            {
+                msg: 'init',
+                canvas: o,
+                gfxConf: gfxConf,
+                h: h,
+                w: w
+            }, [o])
+    })
+}
+
+worker.addEventListener('message', (e) => {
+    if (e.data.msg == 'render') {
         bitmap.transferFromImageBitmap(e.data.bitmap);
     }
 });
 
-
+startWorker();
 
 
 

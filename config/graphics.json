@@ -1,17 +1,17 @@
 {
     "presets": [{
             "title": "high",
-            "stars": 1200,
+            "stars": 2500,
             "ship": true
         },
         {
             "title": "medium",
-            "stars": 800,
+            "stars": 1200,
             "ship": true
         },
         {
             "title": "low",
-            "stars": 400,
+            "stars": 600,
             "ship": false
         },
         {
@@ -20,8 +20,9 @@
             "ship": false
         }
     ],
-    "current": 3,
+    "current": 0,
     "minFrameTime": 2,
     "maxFrameTime": 7,
+    "maxFPS": 60,
     "dynamicRendering": true
 }

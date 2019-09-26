@@ -80,25 +80,10 @@ let optimizeInterval = 60;
 
 //Renderar stjärnorna och alla andra bakgrundselement.
 let alternate = false;
+
 function loop() {
     //Registrerar tidpunkten vid bildrutans början
     starttime = performance.now();
-
-    //Stjärnorna delas upp i 2 grupper. 
-    let pen;
-    let start = 0;
-    let end = 0;
-    if (!alternate) {
-        pen = pen1;
-        alternate = true;
-        start = 0;
-        end = stars.length / 2;
-    } else {
-        pen = pen2;
-        alternate = false;
-        start = stars.length / 2;
-        end = stars.length;
-    }
 
     pen.clearRect(0, 0, w, h);
 
@@ -132,11 +117,11 @@ function loop() {
         stars[i].draw(pen);
     }
 
-    //Renderar skeppet ifall grafikinställningarna tillåter det och 
-    if (gfxConf.presets[gfxConf.current].ship) {
-        ship.attemptFlight(pen);
-    }
+    window.requestAnimationFrame(loop);
+}
 
+
+/*
     if (gfxConf.dynamicRendering) {
         //Räknar hur lång tid som är kvar till nästa optimering
         ticksUntilOptimize++;
@@ -162,7 +147,8 @@ function loop() {
             }
             frametime = 0;
         }
-    }
-
-    window.requestAnimationFrame(loop);
-}
+    }    
+    //Renderar skeppet ifall grafikinställningarna tillåter det och 
+    if (gfxConf.presets[gfxConf.current].ship) {
+        ship.attemptFlight(pen);
+    }*/

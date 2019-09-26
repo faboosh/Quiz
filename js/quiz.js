@@ -40,7 +40,6 @@ class Quiz {
             qBox.classList.add('fly-failed');
         }
 
-
         setTimeout(() => {
             qBox.classList.add('switch');
         }, 500);
@@ -48,6 +47,10 @@ class Quiz {
         setTimeout(() => {
             qBox.classList.remove('fly', 'rainbow-boxshadow-flight', 'switch', 'fly-failed');
         }, 600);
+
+        setTimeout(() => {
+            worker.postMessage({msg: 'play'});
+        }, 900);
     }
 
     checkAnswer() {
@@ -96,6 +99,7 @@ class Quiz {
 
         //Lägger en event listener på en knapp, som kör funktionen som laddar och renderar nästa fråga
         document.getElementById('nextQuestion').addEventListener('click', () => {
+            worker.postMessage({msg: 'pause'});
             this.next();
         });
     }

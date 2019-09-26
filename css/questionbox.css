@@ -2,7 +2,7 @@
     position: absolute;
     top: 65%;
     left: 50%;
-    transform: translate(-50%, -90%);
+    transform: translate(-50%, -90%) translateZ(0);
     margin-top: 20px;
     width: 60%;
     min-height: 400px;
@@ -27,19 +27,19 @@
 
 .fly{
     transition: all 0.6s ease-in-out;
-    transform: translate(-110vw, -90%) rotate(-10deg);
+    transform: translate(-110vw, -90%) rotate(-10deg) translateZ(0);
     filter: hue-rotate(180deg) opacity(0%);
 }
 
 .fly-failed{
     transition: all 0.6s ease-in-out;
-    transform: translate(-110vw, 100vh) rotate(-180deg);
+    transform: translate(-110vw, 100vh) rotate(-180deg) translateZ(0);
     filter: hue-rotate(180deg) opacity(0%) saturation(0%);
 }
 
 .switch{
     transition: all 0s;
-    transform: translate(110vw, 0) rotate(-10deg);
+    transform: translate(110vw, 0) rotate(-10deg) translateZ(0);
 }
 
 .celebrate.celebrate.celebrate {

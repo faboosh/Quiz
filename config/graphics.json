@@ -2,27 +2,31 @@
     "presets": [{
             "title": "high",
             "stars": 2500,
-            "ship": true
+            "ship": true,
+            "freezeOnTransition": false
         },
         {
             "title": "medium",
             "stars": 1200,
-            "ship": true
+            "ship": true,
+            "freezeOnTransition": false
         },
         {
             "title": "low",
             "stars": 600,
-            "ship": false
+            "ship": false,
+            "freezeOnTransition": true
         },
         {
             "title": "ultra low",
             "stars": 200,
-            "ship": false
+            "ship": false,
+            "freezeOnTransition": true
         }
     ],
     "current": 0,
-    "minFrameTime": 2,
-    "maxFrameTime": 7,
+    "minFrameTime": 35,
+    "maxFrameTime": 43,
     "maxFPS": 60,
-    "dynamicRendering": true
+    "dynamicRendering": false
 }

@@ -115,6 +115,9 @@ let gfxConf;
 let c;
 let pen;
 let currentFrame;
+let averageFrametime = 0;
+let frameCounter = 0;
+let samplingInterval = 30;
 
 function animate() {
     currentFrame = self.requestAnimationFrame(animate);
@@ -122,8 +125,29 @@ function animate() {
     frametime = now - then;
 
     if (frametime > interval) {
-        
+
         then = now - (frametime % interval);
+        if(gfxConf.dynamicRendering) {
+            frameCounter++
+            if (frameCounter <= samplingInterval) {
+                averageFrametime += frametime;
+            } else {
+    
+                if ((averageFrametime / frameCounter) > gfxConf.maxFrameTime && (gfxConf.current + 1) < gfxConf.presets.length) {
+                    gfxConf.current++;
+                    console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
+                    redrawStars(gfxConf.presets[gfxConf.current].stars);
+                } else if ((averageFrametime / frameCounter) < gfxConf.minFrameTime && gfxConf.current != 0) {
+                    gfxConf.current--;
+                    console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
+                    redrawStars(gfxConf.presets[gfxConf.current].stars);
+                }
+                //console.log(averageFrametime / frameCounter + 'ms');
+                frameCounter = 0;
+                averageFrametime = 0;
+            }
+    
+        }
 
         //console.log('animated');
         pen.clearRect(0, 0, w, h);
@@ -156,7 +180,7 @@ function animate() {
                 }
             }
             stars[i].draw(pen);
-            
+
         }
     }
 }
@@ -168,21 +192,21 @@ self.onmessage = (e) => {
         h = e.data.h;
         gfxConf = e.data.gfxConf;
         fps = gfxConf.maxFPS;
-        interval = 1000/fps;
+        interval = 1000 / fps;
         animate();
         drawStars(gfxConf.presets[gfxConf.current].stars);
     }
 
-    if (e.data.msg === 'pause') {
+    if (e.data.msg === 'pause' && gfxConf.presets[gfxConf.current].freezeOnTransition) {
         console.log(e.data.msg);
-        //self.cancelAnimationFrame(currentFrame);
+        self.cancelAnimationFrame(currentFrame);
     }
 
-    if(e.data.msg === 'play') {
-        //animate();
+    if (e.data.msg === 'play' && gfxConf.presets[gfxConf.current].freezeOnTransition) {
+        animate();
     }
 
-    if(e.data.msg === 'resize') {
+    if (e.data.msg === 'resize') {
         w = e.data.w;
         h = e.data.h;
         updateCanvasRes(w, h);

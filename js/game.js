@@ -1,61 +1,87 @@
-const q = new Quiz();
-q.player.push(new Player());
+const quiz = new Quiz();
+quiz.player.push(new Player());
 
+
+//Lyssnar efter när spelaren trycker på startknappen
 document.getElementById('startButton').addEventListener('click',
     () => {
         document.getElementById('startmenu').classList.add('hidden');
 
         setTimeout(() => { document.getElementById('question-box').classList.remove('hidden') }, 500);
-        q.load();
+        quiz.load();
 
         //Anpassar canvasens storlek och renderar om alla stjärnor när fönstret ändrar storlek
         window.addEventListener('resize', () => {
             console.log('resized');
             w = window.innerWidth;
             h = window.innerHeight;
-            worker.postMessage({msg: 'resize', h: h, w: w});
+            workerArray.forEach((current) => {
+                current.worker.postMessage({ msg: 'resize', h: h, w: w });
+            })
         })
 
-        q.player[0].name = document.getElementById('name').getElementsByTagName('input')[0].value;
+        quiz.player[0].name = document.getElementById('playername').value;
     })
 
-let c = document.getElementById('bgCanvas');
-c.height = window.innerHeight;
-c.width = window.innerWidth;
-let o = c.transferControlToOffscreen();
+//Meddelandekanal för workers
+const channel = new MessageChannel();
 
-let w = window.innerWidth;
-let h = window.innerHeight;
+//Array för alla workers 
+let workerArray = [];
 
-let worker = new Worker('js/bgworker.js');
+//Skapa canvas och worker för experimentell offscreen-rendering
+class ExperimentalCanvasWorker {
+    constructor(canvasName, pathToWorker, pathToConfig) {
+        this.canvas = document.getElementById(canvasName);
+        this.canvas.height = window.innerHeight;
+        this.canvas.width = window.innerWidth;
+        this.offscreen = this.canvas.transferControlToOffscreen();
+        this.worker = new Worker(pathToWorker);
+        this.pathToConfig = pathToConfig;
+    }
 
-async function startWorker() {
-    new Promise((resolve, reject) => {
-        resolve(new FetchJson().fetch('config/graphics.json'));
-    }).then((gfxConf) => {
-        worker.postMessage(
-            {
-                msg: 'init',
-                canvas: o,
-                gfxConf: gfxConf,
-                h: h,
-                w: w
-            }, [o])
-    })
+    async startWorker() {
+        new Promise((resolve, reject) => {
+            resolve(new FetchJson().fetch(this.pathToConfig));
+        }).then((gfxConf) => {
+            this.worker.postMessage(
+                {
+                    msg: 'init',
+                    canvas: this.offscreen,
+                    gfxConf: gfxConf,
+                    h: window.innerHeight,
+                    w: window.innerWidth
+                }, [this.offscreen])
+        })
+    }
 }
 
-worker.addEventListener('message', (e) => {
-    if (e.data.msg == 'render') {
-        bitmap.transferFromImageBitmap(e.data.bitmap);
-    }
+//////////////////
+//Starworker setup
+//////////////////
+
+let starWorker = new ExperimentalCanvasWorker('star-canvas', 'js/starworker.js', 'config/graphics.json');
+
+starWorker.startWorker();
+workerArray.push(starWorker);
+
+//////////////////
+//Cloudworker setup
+//////////////////
+
+let cloudWorker = new ExperimentalCanvasWorker('cloud-canvas', 'js/cloudworker.js', 'config/graphics.json');
+
+cloudWorker.startWorker();
+workerArray.push(starWorker);
+
+//legacyrendering
+workerArray.forEach((current) => {
+    current.worker.addEventListener('message', (e) => {
+        if (e.data.msg == 'render') {
+            bitmap.transferFromImageBitmap(e.data.bitmap);
+        }
+    })
 });
-
-startWorker();
-
-
-
-
-
 
 
 

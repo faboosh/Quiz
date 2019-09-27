@@ -9,7 +9,6 @@ class Star {
 
         this.x = x;
         this.y = y;
-        this.age = 100 * Math.random();
         this.osc1Rate = 2 * Math.random();
         this.osc2Rate = 2 * Math.random();
         this.osc1Pos = 0;
@@ -20,7 +19,6 @@ class Star {
         this.hasTrailSpeed = false;
         this.trail = [];
         this.trailInterval = 5;
-        this.chromaticAbberation = Math.random();
         if (this.hasTrail) {
             this.size *= 2;
         }
@@ -51,6 +49,7 @@ class Star {
         ctx.fill();
     }
 
+    //Uppdaterar oscillatorernas position och byter polaritet ifall den överskrider oscillatorns maxvärde
     calcOsc() {
         if (this.osc1Polarity) {
             this.osc1Pos += this.osc1Rate;
@@ -76,6 +75,7 @@ class Star {
         }
     }
 
+    //Räknar ut stjärnans position utifrån nuvarande hastighet och oscillatorernas position
     calcPos() {
         this.x += this.velX * (0.5 - this.getSine(this.osc1Pos));
         if (this.x >= w || this.x < 0) {
@@ -103,21 +103,24 @@ function drawStars(number) {
     }
 }
 
-//framerate limiting
-let fps;
-let now;
-let then = performance.now();
-let interval;
-let frametime;
-let gfxConf;
-let c;
-let pen;
-let currentFrame;
-let averageFrametime = 0;
-let frameCounter = 0;
-let samplingInterval = 150;
+let c; //Canvas-element
+let pen; //Canvasens rendering context
+let gfxConf; //Lagrar grafikinställningar
+let fps; //Target-fps:en
+let now; //Nuvarande tidpunkt
+let then = performance.now(); //Tidpunkten då senaste bildruta ritades
+let interval; //Antalet millisekunder per bildruta
+let frametime;  //Lagrar frametime för nuvarande bildruta
+let currentFrame; //Lagrar den nuvarande bildrutan i animationen
+let averageFrametime = 0; //Lagrar alla frametimes mellan frameratesamplingsintervallen
+let frameCounter = 0; //Räknar antal bildruta mellan
+let samplingInterval; //Antal frames som ska vara mellan varje optimeringsförsök
+let lastOptimize = performance.now(); //Tidpunkten då senaste optimeringen skedde
+let minOptimizeInterval; //Minimumtid mellan optimeringar i millisekunder
 
 function animate() {
+    //Requestar ny bildruta och lagrar den nuvarande bildrutan i
+    //currentFrame (behövs för att kunna pausa animationen)
     currentFrame = self.requestAnimationFrame(animate);
     now = performance.now();
     frametime = now - then;
@@ -129,12 +132,13 @@ function animate() {
             if (frameCounter < samplingInterval) {
                 averageFrametime += frametime;
             } else {
-
-                if ((averageFrametime / frameCounter) > gfxConf.maxFrameTime && (gfxConf.current + 1) < gfxConf.presets.length) {
+                if ((averageFrametime / frameCounter) > gfxConf.maxFrameTime && (gfxConf.current + 1) < gfxConf.presets.length && ((now -lastOptimize) > minOptimizeInterval)) {
+                    lastOptimize = performance.now();
                     gfxConf.current++;
                     console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
                     redrawStars(gfxConf.presets[gfxConf.current].stars);
-                } else if ((averageFrametime / frameCounter) < gfxConf.minFrameTime && gfxConf.current != 0) {
+                } else if ((averageFrametime / frameCounter) < gfxConf.minFrameTime && gfxConf.current != 0  && ((now -lastOptimize) > minOptimizeInterval)) {
+                    lastOptimize = performance.now();
                     gfxConf.current--;
                     console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
                     redrawStars(gfxConf.presets[gfxConf.current].stars);
@@ -147,11 +151,11 @@ function animate() {
             }
         }
 
+        //Rensar ritytan
         pen.clearRect(0, 0, w, h);
 
         //Renderar stjärnorna
         for (let i = 0; i < stars.length; i++) {
-
             //Beräknar stjärnans båda oscillatorers position
             stars[i].calcOsc();
 
@@ -176,34 +180,48 @@ function animate() {
                     stars[i].hasTrailSpeed = true;
                 }
             }
-
+            //Ritar stjärnan
             stars[i].draw(pen);
         }
     }
 }
 
 self.onmessage = (e) => {
+    //Initialiserar bakgrunds-workern med canvasens 
+    //nuvarande storlek, nuvarande grafik-config 
+    //och startar animationen
     if (e.data.msg == 'init') {
         c = e.data.canvas;
         pen = c.getContext('2d');
         w = e.data.w;
         h = e.data.h;
         gfxConf = e.data.gfxConf;
+        console.log(gfxConf);
         fps = gfxConf.maxFPS;
         interval = 1000 / fps;
+        samplingInterval = gfxConf.samplingInterval;
+        minOptimizeInterval = gfxConf.minTimeBetweenOptimization;
         animate();
         drawStars(gfxConf.presets[gfxConf.current].stars);
     }
 
+    //Pausar bakgrunden medan övergången mellan frågor körs 
+    //ifall freezeOnTransition i grafik-configen är på
     if (e.data.msg === 'pause' && gfxConf.presets[gfxConf.current].freezeOnTransition) {
         console.log(e.data.msg);
         self.cancelAnimationFrame(currentFrame);
     }
 
+    //Sätter igång bakgrunden igen efter den pausats, 
+    //ifall freezeOnTransition i grafik-configen är på
     if (e.data.msg === 'play' && gfxConf.presets[gfxConf.current].freezeOnTransition) {
+        console.log(e.data.msg);
         animate();
     }
 
+    //Uppdaterar canvasens upplösning till skärmens
+    //upplösning då huvudsidan rapporterar att 
+    //upplösningen ändras
     if (e.data.msg === 'resize') {
         w = e.data.w;
         h = e.data.h;
@@ -211,6 +229,9 @@ self.onmessage = (e) => {
     }
 }
 
+//Uppdaterar canvasens storlek med en ny höjd och
+//bredd, samt ritar om alla stjärnor så de passar inom den
+//nya skärmytan
 function updateCanvasRes(newW, newH) {
     w = newW;
     h = newH;

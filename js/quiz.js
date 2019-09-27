@@ -49,7 +49,9 @@ class Quiz {
         }, 600);
 
         setTimeout(() => {
-            worker.postMessage({msg: 'play'});
+            workerArray.forEach((current) => {
+                current.worker.postMessage({ msg: 'play' });
+            })
         }, 900);
     }
 
@@ -99,7 +101,11 @@ class Quiz {
 
         //Lägger en event listener på en knapp, som kör funktionen som laddar och renderar nästa fråga
         document.getElementById('nextQuestion').addEventListener('click', () => {
-            worker.postMessage({msg: 'pause'});
+            setTimeout(() => {
+                workerArray.forEach((current) => {
+                    current.worker.postMessage({ msg: 'pause'});
+                })
+            }, 900);
             this.next();
         });
     }

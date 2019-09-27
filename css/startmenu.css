@@ -7,60 +7,62 @@
     background: var(--bglight);
     opacity: 0.9;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: space-around;
 }
 
 .startmenu h1 {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: 0;
+    margin-bottom: 100px;
+    width: calc(100% - 20px);
+    font-size: 1.5em;
 }
 
 .startmenu button {
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);    
     max-width: 600px;
-    width: 60%;
+    margin: 0 auto;
+    width: 80%;
     height: 80px;
     z-index: 1;
 }
 
 #title {
-    top: 20%;
     width: 100%;
     text-align: center;
 }
 
-#name {
+#options {
     z-index: 4;
-    position: absolute;
-    left: 50%;
-    top: 35%;
     width: 100%;
-    transform: translate(-50%, -50%);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-#name p {
+#options p {
     padding-bottom: 20px;
     text-align: center;
     width: calc(100% - 40px);
     padding: 20px;
 }
 
-#name input {
+#options input {
     color: var(--highlight);
     padding: 10px;
     background: var(--highmid);
     border: none;
-    height: 30px;
-    width: 40%;
-    position: fixed;
+    height: 40px;
+    width: 60%;
+    margin: 0 auto;
+    margin-bottom: 50px;
+    /*position: fixed;
     left: 50%;
-    transform: translate(-50%, -0%);
+    transform: translate(-50%, -0%);*/
 }
 
-#name input:focus {
+#options input:focus {
     border: none;
 }

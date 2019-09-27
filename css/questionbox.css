@@ -120,9 +120,9 @@ span {
 
 .progress {
     position: absolute;
-    left: 50vw;
     bottom: 25px;
-    transform: translate(-50%, 0);
+    width: 100%;
+    text-align: center;
 }
 
 #nextQuestion{

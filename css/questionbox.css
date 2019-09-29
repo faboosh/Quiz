@@ -7,13 +7,17 @@
     width: 60%;
     min-height: 400px;
     max-width: 600px;
-    background: #2d2d2da1;
+    background: #2d2d2d41;
     padding: 30px;
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 0.6fr 2fr 1.4fr;
     transition: all 0.6s ease-in-out;
+}
+
+.question-box:hover {
+    background: #2d2d2d;
 }
 
 .options{
@@ -126,6 +130,10 @@ span {
 }
 
 #nextQuestion{
-    
+    opacity: 0.5;
     width: 100%;
+}
+
+#nextQuestion:hover{
+    opacity: 1;
 }

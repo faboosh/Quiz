@@ -1,71 +1,11 @@
-/*class ChunkMap {
-    constructor(cols, rows) {
-        this.rows = rows;
-        this.cols = cols;
-        this.chunks = [];
-    }
-
-    drawChunks(w, h) {
-        let chunkStartX = 0;
-        let chunkEndX = 0;
-        let chunkStartY = 0;
-        let chunkEndY = 0;
-        console.log(w, h);
-        this.chunks = [];
-        for (let i = 1; i <= this.cols; i++) {
-            chunkStartX = 0;
-            chunkEndX = 0;
-            chunkEndY = w/this.rows * i;
-            for (let i = 1; i <= this.rows; i++) {
-                chunkEndX = h/this.rows * i;
-                this.chunks.push(new Chunk(chunkStartX, chunkEndX, chunkStartY, chunkEndY));
-                chunkStartX = h/this.rows * i;
-            }
-            chunkStartY = w/this.rows * i;
-        }
-    }
-
-    spawnableMap(){
-        let map = "";
-        let counter = 0;
-        this.chunks.forEach((chunk) => {
-            counter++
-            if(chunk.score > 25){
-                chunk.spawnable = true;
-                map += chunk.score + "  ";
-            } else {
-                chunk.spawnable = false;
-                map += "o   ";
-            }
-            if(counter == this.cols) {
-                counter = 0;
-                map += "\n";
-            }
-        });
-        return(map);
-    }
-
-}
-
-class Chunk{
-    constructor(startX, endX, startY, endY){
-        this.startX = Math.round(startX);
-        this.endX = Math.round(endX);
-        this.startY = Math.round(startY);
-        this.endY = Math.round(endY);
-        this.score = 0;
-        this.spawnable;
-    }
-}*/
-
 class CloudBoxContainer{
     constructor(ctx){
         this.clouds = []
         this.ctx = ctx;
     }
 
-    addCloudBox(x, y, width, height, shade) {
-        let cloudBox = new CloudBox(x, y, width, height, shade, this.ctx);
+    addCloudBox(x, y, width, height, density, size, shade) {
+        let cloudBox = new CloudBox(x, y, width, height, density, size, shade, this.ctx);
         this.clouds.push(cloudBox);
     }
 
@@ -93,14 +33,14 @@ class CloudBoxContainer{
 }
 
 class CloudBox{
-    constructor(x, y, width, height, shade, ctx) {
+    constructor(x, y, width, height, density, size, shade, ctx) {
         this.x = x;
         this.y = y;
         this.w = width;
         this.h = height;
         this.ctx = ctx;
         this.drawBoundingBoxes = false;
-        this.cloud = new Cloud(this.x, this.w, this.y, this.h, 200, 100, shade, ctx);
+        this.cloud = new Cloud(this.x, this.w, this.y, this.h, density, size, shade, this.ctx);
     }
 
     drawCloud() {
@@ -126,7 +66,6 @@ class Cloud {
         this.circles = [];
         this.shade = shade;
         this.ctx = ctx;
-        //this.chunkMap = chunkMap;
     }
 
     addCircle(x, y, radius) {
@@ -147,17 +86,9 @@ class Cloud {
     render() {
         this.circles.forEach((circle) => {
             circle.render(this.ctx);
-            /*his.chunkMap.chunks.forEach((chunk) => {
-                if((circle.x >= chunk.startX && circle.x <= chunk.endX) && (circle.y >= chunk.startY && circle.y <= chunk.endY)) {
-                    chunk.score += Math.round(circle.radius * circle.luminosity * 10);
-                } 
-            })*/
         });
-        //console.log(this.chunkMap.spawnableMap());
     }
 }
-
-//let chunkMap = new ChunkMap(15,15);
 
 class GradientCircle {
     constructor(x, y, radius, shade) {
@@ -278,14 +209,6 @@ self.onmessage = (e) => {
         interval = 1000 / fps;
         samplingInterval = gfxConf.samplingInterval;
         minOptimizeInterval = gfxConf.minTimeBetweenOptimization;
-        /*if (h > w) {
-            h = newW;
-            w = newH;
-        }*/
-        /*cloud = new Cloud(w, h/5, pen, chunkMap);
-        cloud.newRandom();
-        cloud.render();
-        cloud.chunkMap.drawChunks(w, h);*/
         renderClouds();
         animate();
     }
@@ -314,24 +237,6 @@ self.onmessage = (e) => {
         updateCanvasRes(w, h);
         renderClouds();
     }
-
-    if(e.data.msg === 'start'){
-        let container = new CloudBoxContainer(pen);
-        let number = 25;
-        for(let i = 0; i < number; i++) {
-            let c1 = Math.round(255 * Math.random());
-            let c2 = Math.round(255 * Math.random());
-            let shade = c1 + ',' + c2;
-            console.log(shade);
-            let x = w * Math.random() * 0.5 + w/number * i + Math.sin(i) * number;
-            let y = h * Math.random() * 0.5 + h/number * i + Math.sin(i) * number;
-            let wi = 250 + 250 * Math.random();
-            let he = 250 + 250 * Math.random();
-            container.addCloudBox(x - wi * 0.5, y - he * 0.5, wi, he, shade);
-        }
-
-        container.render();
-    }
 }
 
 //Uppdaterar canvasens storlek med en ny höjd och
@@ -342,33 +247,32 @@ function updateCanvasRes(newW, newH) {
     h = newH;
     c.height = h;
     c.width = w;
-    /*if (h > w) {
-        h = newW;
-        w = newH;
-    }*/
-    /*cloud = new Cloud(w, h/5, pen, chunkMap);
-    cloud.newRandom();
-    cloud.render();
-    cloud.chunkMap.drawChunks(w, h);*/
 }
-
 
 function renderClouds(){
     let container = new CloudBoxContainer(pen);
-    let number = 40;
+    let number = 25;
     for(let i = 0; i < number; i++) {
-        let c1 = Math.round(255 * Math.random());
-        let c2 = Math.round(255 * Math.random());
+        let c1 = Math.round(50 * i / number);
+        let c2 = 255 - Math.round(255 * i / number);
         let shade = c1 + ',' + c2;
         console.log(shade);
-        let x = w * Math.random() * 0.5 + w/number * i + Math.sin(i) * number;
-        let y = h * Math.random() * 0.5 + h/number * i + Math.sin(i) * number;
-        let wi = 200 + 400 * Math.random();
-        let he = 200 + 400 * Math.random();
-        container.addCloudBox(x - wi * 0.5, y - he * 0.5, wi, he, shade);
+        let x = w * Math.random() * 0.2 + w/number * i + Math.sin(i) * number;
+        let y = h * Math.random() * 0.2 + number + h/number * i + Math.sin(i) * number;
+        x += Math.sin(x / w * Math.PI * 2) * 5;
+        y += Math.sin(y / h * Math.PI * 2) * 5;
+        let wi = 300 + 200 * Math.random();
+        let he = 300 + 200 * Math.random();
+        container.addCloudBox(
+            x - wi * 0.5, 
+            y - he * 0.5, 
+            wi + i * 20, 
+            he + i * 20, 
+            200 + 50 * Math.random(),
+            100 + 25 * Math.random(),
+            shade);
     }
-
     container.render();
 }
+
 const channel = new BroadcastChannel('channel');
-channel.postMessage({msg: 'transfer'});

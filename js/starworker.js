@@ -272,11 +272,11 @@ channel.onmessage = (e) => {
 
 function inBorder(x, y) {
     let inBorder = false;
-    borders.forEach((box) => {
-        if(x > box.x && x < box.x + box.width && y > box.y && y < box.y + box.height) {
+    for(let i = 0; i < borders.length; i++) {
+        if(x > borders[i].x && x < borders[i].x + borders[i].width && y > borders[i].y && y < borders[i].y + borders[i].height) {
             inBorder = true;
-            console.log('star in border');
-        };
-    })
+            break;
+        }
+    }
     return inBorder;
 }

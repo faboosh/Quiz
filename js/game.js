@@ -24,37 +24,9 @@ document.getElementById('startButton').addEventListener('click',
     })
 
 //Meddelandekanal för workers
-const channel = new MessageChannel();
 
 //Array för alla workers 
 let workerArray = [];
-
-//Skapa canvas och worker för experimentell offscreen-rendering
-class ExperimentalCanvasWorker {
-    constructor(canvasName, pathToWorker, pathToConfig) {
-        this.canvas = document.getElementById(canvasName);
-        this.canvas.height = window.innerHeight;
-        this.canvas.width = window.innerWidth;
-        this.offscreen = this.canvas.transferControlToOffscreen();
-        this.worker = new Worker(pathToWorker);
-        this.pathToConfig = pathToConfig;
-    }
-
-    async startWorker() {
-        new Promise((resolve, reject) => {
-            resolve(new FetchJson().fetch(this.pathToConfig));
-        }).then((gfxConf) => {
-            this.worker.postMessage(
-                {
-                    msg: 'init',
-                    canvas: this.offscreen,
-                    gfxConf: gfxConf,
-                    h: window.innerHeight,
-                    w: window.innerWidth
-                }, [this.offscreen])
-        })
-    }
-}
 
 //////////////////
 //Starworker setup
@@ -72,16 +44,22 @@ workerArray.push(starWorker);
 let cloudWorker = new ExperimentalCanvasWorker('cloud-canvas', 'js/cloudworker.js', 'config/graphics.json');
 
 cloudWorker.startWorker();
-workerArray.push(starWorker);
+workerArray.push(cloudWorker);
 
 //legacyrendering
-workerArray.forEach((current) => {
+/*workerArray.forEach((current) => {
     current.worker.addEventListener('message', (e) => {
         if (e.data.msg == 'render') {
             bitmap.transferFromImageBitmap(e.data.bitmap);
         }
+
+        if (e.data.msg == 'transfer') {
+            console.log('transfered');
+        }
     })
-});
+});*/
+
+
 
 
 

@@ -70,7 +70,6 @@ class Quiz {
             this.player[0].answers = [];
         } else {
             this.player[0].question++;
-
         }
 
         if (this.checkAnswer()) {
@@ -78,7 +77,6 @@ class Quiz {
             this.question.title.innerText = 'Correct!';
             this.qBox.classList.add('celebrate');
             setTimeout(() => { this.qBox.classList.remove('celebrate'); }, extraTimeout);
-
         } else {
             this.question.title.innerText = 'Incorrect :(';
             setTimeout(() => { }, extraTimeout);

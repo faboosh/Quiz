@@ -6,7 +6,6 @@ class Star {
         } else {
             this.size = 0.2;
         }
-
         this.x = x;
         this.y = y;
         this.osc1Rate = 2 * Math.random();
@@ -99,7 +98,11 @@ function redrawStars(number) {
 //Ritar ett specificerat antal stjärnor
 function drawStars(number) {
     for (let i = 0; i < number; i++) {
-        stars.push(new Star(1.5, w * Math.random(), h * Math.random()));
+        let x = w * Math.random();
+        let y = h * Math.random();
+        if(inBorder(x, y) || Math.random() > 0.85) {
+            stars.push(new Star(1.5, x, y));
+        }
     }
 }
 
@@ -201,8 +204,6 @@ self.onmessage = (e) => {
         interval = 1000 / fps;
         samplingInterval = gfxConf.samplingInterval;
         minOptimizeInterval = gfxConf.minTimeBetweenOptimization;
-        animate();
-        drawStars(gfxConf.presets[gfxConf.current].stars);
     }
 
     //Pausar bakgrunden medan övergången mellan frågor körs 
@@ -227,6 +228,11 @@ self.onmessage = (e) => {
         h = e.data.h;
         updateCanvasRes(w, h);
     }
+
+    if (e.data.msg === 'start') {
+        animate();
+        redrawStars(gfxConf.presets[gfxConf.current].stars);
+    }
 }
 
 //Uppdaterar canvasens storlek med en ny höjd och
@@ -237,5 +243,40 @@ function updateCanvasRes(newW, newH) {
     h = newH;
     c.height = h;
     c.width = w;
-    redrawStars(gfxConf.presets[gfxConf.current].stars);
+    //redrawStars(gfxConf.presets[gfxConf.current].stars);
+}
+let borders;
+const channel = new BroadcastChannel('channel');
+channel.onmessage = (e) => {
+    /*if (e.data.msg == 'transfer') {
+        redrawStars(gfxConf.presets[gfxConf.current].stars);
+        animate();
+    }*/
+
+    async function loadData() {
+        new Promise((resolve, reject) => {
+
+            resolve(e.data.borders);
+        }).then((data) => {
+            console.log(data);
+        });       
+    }
+    //loadData();
+    if (e.data.msg == 'borders') {
+        console.log(JSON.parse(e.data.borders));
+        borders = JSON.parse(e.data.borders);
+        redrawStars(gfxConf.presets[gfxConf.current].stars);
+        animate();
+    }
+};
+
+function inBorder(x, y) {
+    let inBorder = false;
+    borders.forEach((box) => {
+        if(x > box.x && x < box.x + box.width && y > box.y && y < box.y + box.height) {
+            inBorder = true;
+            console.log('star in border');
+        };
+    })
+    return inBorder;
 }

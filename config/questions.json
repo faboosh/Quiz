@@ -64,6 +64,16 @@
                 "Lars Ulrich"
             ],
             "correct": [1,3]
+        },
+        {
+            "title": "What is <span>Skrillex's</span> real name?",
+            "options": [
+                "Jason Zimmerman",
+                "Eric Bazillian",
+                "Sonny Moore",
+                "Bas Oskam"
+            ],
+            "correct": [2]
         }
     ]
 }

@@ -18,11 +18,12 @@ class Star {
         this.hasTrailSpeed = false;
         this.trail = [];
         this.trailInterval = 5;
-        if (this.hasTrail) {
+        this.luminosity = 0.3 + Math.random() * 0.7;
+        if (this.hasTrail || Math.random() > 0.9) {
             this.size *= 2;
         }
-        this.velX = (1 * Math.random() - 0.5 * this.size) / 3;
-        this.velY = (1 * Math.random() - 0.5 * this.size) / 3;
+        this.velX = (1 * Math.random() - 0.5 * this.size) / 6;
+        this.velY = (1 * Math.random() - 0.5 * this.size) / 6;
     }
 
     //Räknar ut sinusmotsvarigheten???? <--(probably inte ett ord) till oscillatorns position
@@ -44,7 +45,7 @@ class Star {
     draw(ctx) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-        ctx.fillStyle = `rgba(255,255,255, ${1})`;
+        ctx.fillStyle = `rgba(255,255,255, ${this.luminosity})`;
         ctx.fill();
     }
 
@@ -90,18 +91,18 @@ class Star {
 let stars = [];
 
 //Tar bort alla stjärnor och renderar nya
-function redrawStars(number) {
+function redrawStars() {
     stars = [];
-    drawStars(number);
+    drawStars();
 }
 
 //Ritar ett specificerat antal stjärnor
-function drawStars(number) {
-    for (let i = 0; i < number; i++) {
+function drawStars() {
+    while (stars.length < gfxConf.presets[gfxConf.current].stars) {
         let x = w * Math.random();
         let y = h * Math.random();
-        if(inBorder(x, y) || Math.random() > 0.85) {
-            stars.push(new Star(1.5, x, y));
+        if(inBorder(x, y) || Math.random() > 0.8) {
+            stars.push(new Star(2, x, y));
         }
     }
 }
@@ -178,8 +179,8 @@ function animate() {
                 }
                 stars[i].drawTrail(pen);
                 if (!stars[i].hasTrailSpeed) {
-                    stars[i].velY *= 5;
-                    stars[i].velX *= 5;
+                    stars[i].velY *= 10;
+                    stars[i].velX *= 10;
                     stars[i].hasTrailSpeed = true;
                 }
             }
@@ -231,7 +232,7 @@ self.onmessage = (e) => {
 
     if (e.data.msg === 'start') {
         animate();
-        redrawStars(gfxConf.presets[gfxConf.current].stars);
+        redrawStars();
     }
 }
 
@@ -243,29 +244,15 @@ function updateCanvasRes(newW, newH) {
     h = newH;
     c.height = h;
     c.width = w;
-    //redrawStars(gfxConf.presets[gfxConf.current].stars);
 }
+
 let borders;
 const channel = new BroadcastChannel('channel');
 channel.onmessage = (e) => {
-    /*if (e.data.msg == 'transfer') {
-        redrawStars(gfxConf.presets[gfxConf.current].stars);
-        animate();
-    }*/
-
-    async function loadData() {
-        new Promise((resolve, reject) => {
-
-            resolve(e.data.borders);
-        }).then((data) => {
-            console.log(data);
-        });       
-    }
-    //loadData();
     if (e.data.msg == 'borders') {
         console.log(JSON.parse(e.data.borders));
         borders = JSON.parse(e.data.borders);
-        redrawStars(gfxConf.presets[gfxConf.current].stars);
+        redrawStars();
         animate();
     }
 };

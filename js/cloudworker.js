@@ -54,7 +54,6 @@ class CloudBox{
     }
 }
 
-
 class Cloud {
     constructor(x, w, y, h, number, size, shade, ctx) {
         this.x = x;
@@ -186,11 +185,6 @@ function animate() {
             }
         }
 
-        //Rensar ritytan
-        //pen.clearRect(0, 0, w, h);
-
-        //Renderar 
-        //cloud.render(pen);
     }
 }
 
@@ -210,7 +204,7 @@ self.onmessage = (e) => {
         samplingInterval = gfxConf.samplingInterval;
         minOptimizeInterval = gfxConf.minTimeBetweenOptimization;
         renderClouds();
-        animate();
+        //animate();
     }
 
     //Pausar bakgrunden medan övergången mellan frågor körs 
@@ -251,21 +245,20 @@ function updateCanvasRes(newW, newH) {
 
 function renderClouds(){
     let container = new CloudBoxContainer(pen);
-    let number = 25;
+    let number = 35;
     for(let i = 0; i < number; i++) {
         let c1 = Math.round(50 * i / number);
         let c2 = 255 - Math.round(255 * i / number);
         let shade = c1 + ',' + c2;
-        console.log(shade);
         let x = w * Math.random() * 0.2 + w/number * i + Math.sin(i) * number;
         let y = h * Math.random() * 0.2 + number + h/number * i + Math.sin(i) * number;
-        x += Math.sin(x / w * Math.PI * 2) * 5;
-        y += Math.sin(y / h * Math.PI * 2) * 5;
+        x += Math.sin(x / w * Math.PI * 2) * 20;
+        y += Math.sin(y / h * Math.PI * 2) * 20;
         let wi = 300 + 200 * Math.random();
         let he = 300 + 200 * Math.random();
         container.addCloudBox(
-            x - wi * 0.5, 
-            y - he * 0.5, 
+            x - 100 - wi * 0.5, 
+            y - 100 - he * 0.5, 
             wi + i * 20, 
             he + i * 20, 
             200 + 50 * Math.random(),
@@ -273,6 +266,7 @@ function renderClouds(){
             shade);
     }
     container.render();
+    //animate();
 }
 
 const channel = new BroadcastChannel('channel');

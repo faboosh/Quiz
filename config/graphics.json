@@ -31,10 +31,10 @@
             "freezeOnTransition": true
         }
     ],
-    "current": 1,
+    "current": 2,
     "minFrameTime": 35,
     "maxFrameTime": 40,
-    "maxFPS": 36,
+    "maxFPS": 30,
     "dynamicRendering": false,
     "samplingInterval": 60,
     "minTimeBetweenOptimization": 10000,

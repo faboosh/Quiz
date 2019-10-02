@@ -35,6 +35,7 @@
         min-height: 350px;
         max-width: 525px;
     }
+    
     .checkbox {
         padding-top: 15px;
     }
@@ -43,6 +44,7 @@
         bottom: 20px;
         transform: rotateX(10deg) scale(1, 1.2);
     }
+
     #title {
         top: 40%;
     }

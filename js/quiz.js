@@ -3,6 +3,8 @@ class Quiz {
         this.player = [];
         //objekt som håller nuvarande laddade frågor
         this.questions = {};
+        //JSON-response
+        this.jsonResponse;
         //Skapar ett objekt med referenser till HTML-elementen för frågan + svarsalternativ
         window.addEventListener('DOMContentLoaded', () => {
             this.qBox = document.getElementById('question-box');
@@ -56,20 +58,30 @@ class Quiz {
     }
 
     checkAnswer() {
+        //Lagrar användarens svar som bools 
         let answers = Array.from(document.getElementsByClassName('answer')).map((answer) => { return answer.checked });
-        return this.question.correct.every((i) => {
-            return answers[i] == true;
-        });
+
+        //kollar så att användaren inte angett för många svar
+        if (answers.filter((answer) => { return answer == true }).length == this.question.correct.length) {
+
+            //Kollar så att svaren användaren angett är korrekta
+            return this.question.correct.every((i) => {
+                return answers[i] == true;
+            });
+        } else {
+            //Returnerar false ifall användaren angett för många svar
+            return false;
+        }
     }
 
     //Kör övergången mellan frågor och laddar in nästa fråga
     next() {
         let extraTimeout = 0;
-        if (this.player[0].question >= this.questions.length - 1) {
+        this.player[0].question++;
+        if(this.player[0].question >= this.questions.length) {
             this.player[0].question = 0;
             this.player[0].answers = [];
-        } else {
-            this.player[0].question++;
+            this.end();
         }
 
         if (this.checkAnswer()) {
@@ -83,28 +95,43 @@ class Quiz {
         }
 
         this.player[0].answers.push(this.checkAnswer());
-        console.log(this.player[0].answers);
 
         setTimeout(() => { this.transition() }, 400 + extraTimeout);
         setTimeout(() => { this.set(this.questions[this.player[0].question]) }, 1000 + extraTimeout);
     }
 
-    //Laddar in frågorna från en JSON-fil och parsear dem till objektet 'questions'
+    //Laddar in frågorna från en JSON-fil och parsear dem till objektet 'jsonResponse'
     async load() {
         this.questions = await new FetchJson().fetch('config/questions.json');
-        this.questions = this.questions.questions;
+        this.jsonResponse = this.questions.questions;
+        //Sätter maxantalet frågor som användaren kan välja baserat på antalet frågor som finns
+        document.getElementById('no-of-questions').setAttribute('max', quiz.jsonResponse.length);
+        //Visar play-knappen efter att frågorna är laddade
+        document.getElementById('startButton').classList.remove('hidden');
+    }
 
+    start() {
         //Sätter nuvarande fråga till första frågan i 'questions' och renderar den i dokumentet
         this.set(this.questions[0]);
 
-        //Lägger en event listener på en knapp, som kör funktionen som laddar och renderar nästa fråga
+        //Lägger en event listener på knappen next question, som kör funktionen som laddar och renderar nästa fråga
         document.getElementById('nextQuestion').addEventListener('click', () => {
             setTimeout(() => {
                 workerArray.forEach((current) => {
-                    current.worker.postMessage({ msg: 'pause'});
+                    current.worker.postMessage({ msg: 'pause' });
                 })
             }, 900);
             this.next();
         });
+    }
+
+    toggleFullScreen(){
+        document.getElementById('startmenu').classList.toggle('hidden');
+        document.getElementById('question-box').classList.toggle('hidden');
+    }
+
+    end(){
+        document.getElementById('endscreen').classList.toggle('hidden');
+        document.getElementById('question-box').classList.toggle('hidden');
     }
 }

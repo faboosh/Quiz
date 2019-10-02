@@ -35,7 +35,7 @@
     "minFrameTime": 35,
     "maxFrameTime": 40,
     "maxFPS": 30,
-    "dynamicRendering": false,
+    "dynamicRendering": true,
     "samplingInterval": 60,
     "minTimeBetweenOptimization": 10000,
     "logFrametime": false

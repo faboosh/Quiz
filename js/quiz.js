@@ -48,6 +48,9 @@ class Quiz {
 
         setTimeout(() => {
             qBox.classList.remove('fly', 'rainbow-boxshadow-flight', 'switch', 'fly-failed');
+            if (this.player[0].question == this.questions.length - 1) {
+                document.getElementById('nextQuestion').innerText = "Finish Quiz";
+            }
         }, 600);
 
         setTimeout(() => {
@@ -78,26 +81,23 @@ class Quiz {
     next() {
         let extraTimeout = 0;
         this.player[0].question++;
-        if(this.player[0].question >= this.questions.length) {
-            this.player[0].question = 0;
-            this.player[0].answers = [];
-            this.end();
-        }
-
-        if (this.checkAnswer()) {
-            extraTimeout = 400;
-            this.question.title.innerText = 'Correct!';
-            this.qBox.classList.add('celebrate');
-            setTimeout(() => { this.qBox.classList.remove('celebrate'); }, extraTimeout);
-        } else {
-            this.question.title.innerText = 'Incorrect :(';
-            setTimeout(() => { }, extraTimeout);
-        }
-
         this.player[0].answers.push(this.checkAnswer());
+        if (this.player[0].question >= this.questions.length) {
+            this.end();
+        } else {
+            if (this.checkAnswer()) {
+                extraTimeout = 400;
+                this.question.title.innerText = 'Correct!';
+                this.qBox.classList.add('celebrate');
+                setTimeout(() => { this.qBox.classList.remove('celebrate'); }, extraTimeout);
+            } else {
+                this.question.title.innerText = 'Incorrect :(';
+                setTimeout(() => { }, extraTimeout);
+            }
 
-        setTimeout(() => { this.transition() }, 400 + extraTimeout);
-        setTimeout(() => { this.set(this.questions[this.player[0].question]) }, 1000 + extraTimeout);
+            setTimeout(() => { this.transition() }, 400 + extraTimeout);
+            setTimeout(() => { this.set(this.questions[this.player[0].question]) }, 1000 + extraTimeout);
+        }
     }
 
     //Laddar in frågorna från en JSON-fil och parsear dem till objektet 'jsonResponse'
@@ -111,6 +111,10 @@ class Quiz {
     }
 
     start() {
+        this.player[0].name = document.getElementById('playername').value;
+        document.getElementById('startmenu').classList.toggle('hidden');
+        document.getElementById('question-box').classList.toggle('hidden');
+
         //Sätter nuvarande fråga till första frågan i 'questions' och renderar den i dokumentet
         this.set(this.questions[0]);
 
@@ -125,13 +129,22 @@ class Quiz {
         });
     }
 
-    toggleFullScreen(){
-        document.getElementById('startmenu').classList.toggle('hidden');
-        document.getElementById('question-box').classList.toggle('hidden');
-    }
-
-    end(){
+    end() {
         document.getElementById('endscreen').classList.toggle('hidden');
         document.getElementById('question-box').classList.toggle('hidden');
+        let noOfCorrectAnswers = this.player[0].answers.filter((answer) => {return answer}).length;
+        let noOfQuestions = this.questions.length;
+        let ratio = noOfCorrectAnswers / noOfQuestions;
+        let comment;
+        if(ratio == 1) {
+            comment = ', <br><br>You absolute nerd. <span>I like you.</span>';
+        } else if (ratio >= 0.75) {
+            comment = '. <br><br>Can\'t say I\'m disappointed.';
+        } else if (ratio >= 0.5) {
+            comment = '. <br><br>You\'re average at best :/';
+        } else if (ratio < 0.5) {
+            comment = '. <br><br>I want you to think about that. I am judging you.';
+        }
+        document.getElementById('endscreen-score').innerHTML = `${this.player[0].name}, you answered ${noOfCorrectAnswers} out of ${noOfQuestions} questions correctly${comment}`;
     }
 }

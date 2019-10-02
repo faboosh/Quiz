@@ -1,5 +1,5 @@
-class CloudBoxContainer{
-    constructor(ctx){
+class CloudBoxContainer {
+    constructor(ctx) {
         this.clouds = []
         this.ctx = ctx;
     }
@@ -10,7 +10,7 @@ class CloudBoxContainer{
     }
 
     render() {
-        this.ctx.clearRect(0,0,w,h);
+        this.ctx.clearRect(0, 0, w, h);
         this.clouds.forEach((cloud) => {
             cloud.drawCloud();
         });
@@ -24,7 +24,7 @@ class CloudBoxContainer{
             }
             coordinates.push(current);
         });
-        this.emitJSON({msg: 'borders', borders: JSON.stringify(coordinates)});
+        this.emitJSON({ msg: 'borders', borders: JSON.stringify(coordinates) });
     }
 
     emitJSON(message) {
@@ -32,7 +32,7 @@ class CloudBoxContainer{
     }
 }
 
-class CloudBox{
+class CloudBox {
     constructor(x, y, width, height, density, size, shade, ctx) {
         this.x = x;
         this.y = y;
@@ -44,11 +44,10 @@ class CloudBox{
     }
 
     drawCloud() {
-        if(this.drawBoundingBoxes) {
+        if (this.drawBoundingBoxes) {
             this.ctx.strokeStyle = 'white';
             this.ctx.strokeRect(this.x, this.y, this.w, this.h);
         }
-        console.log('rendered');
         this.cloud.newRandom();
         this.cloud.render();
     }
@@ -100,16 +99,16 @@ class GradientCircle {
         this.shade = shade;
         this.radius = radius;
         let minRadius = 40;
-        if(this.radius < minRadius) {
+        if (this.radius < minRadius) {
             this.radius = minRadius;
         }
         this.pulsate = 0;
         let colorRand = Math.random();
-        if(colorRand > 0.8) {
-            this.basecolor = '255,' + this.shade;         
-        } else if(colorRand > 0.6){
+        if (colorRand > 0.8) {
+            this.basecolor = '255,' + this.shade;
+        } else if (colorRand > 0.6) {
             this.basecolor = '150,' + this.shade;
-        } else if(colorRand > 0.4){
+        } else if (colorRand > 0.4) {
             this.basecolor = '80,' + this.shade;
         } else {
             this.basecolor = '30,' + this.shade;
@@ -207,20 +206,6 @@ self.onmessage = (e) => {
         //animate();
     }
 
-    //Pausar bakgrunden medan övergången mellan frågor körs 
-    //ifall freezeOnTransition i grafik-configen är på
-    if (e.data.msg === 'pause' && gfxConf.presets[gfxConf.current].freezeOnTransition) {
-        console.log(e.data.msg);
-        self.cancelAnimationFrame(currentFrame);
-    }
-
-    //Sätter igång bakgrunden igen efter den pausats, 
-    //ifall freezeOnTransition i grafik-configen är på
-    if (e.data.msg === 'play' && gfxConf.presets[gfxConf.current].freezeOnTransition) {
-        console.log(e.data.msg);
-        animate();
-    }
-
     //Uppdaterar canvasens upplösning till skärmens
     //upplösning då huvudsidan rapporterar att 
     //upplösningen ändras
@@ -243,26 +228,39 @@ function updateCanvasRes(newW, newH) {
     c.width = w;
 }
 
-function renderClouds(){
+function renderClouds() {
+    let xSkew = Math.random();
+    let ySkew = Math.random();
+    let c1Mod = Math.random();
+    let c2Mod = Math.random();
     let container = new CloudBoxContainer(pen);
     let number = 35;
-    for(let i = 0; i < number; i++) {
-        let c1 = Math.round(50 * i / number);
-        let c2 = 255 - Math.round(255 * i / number);
+    let xInvert = Math.random() > 0.5;
+    let yInvert = Math.random() > 0.5;
+    function checkInverted(axis, i){
+        if(axis){
+            return number - i;
+        } else {
+            return i;
+        }
+    }
+    for (let i = 0; i < number; i++) {
+        let c1 = Math.round((255 * c1Mod) * i / number);
+        let c2 = 255 - Math.round((255 * c2Mod) * i / number);
         let shade = c1 + ',' + c2;
-        let x = w * Math.random() * 0.2 + w/number * i + Math.sin(i) * number;
-        let y = h * Math.random() * 0.2 + number + h/number * i + Math.sin(i) * number;
-        x += Math.sin(x / w * Math.PI * 2) * 20;
-        y += Math.sin(y / h * Math.PI * 2) * 20;
+        let x = w * Math.random() * 0.2 + w / number * (checkInverted(xInvert,i) * xSkew) + Math.sin(i) * number;
+        let y = h * Math.random() * 0.2 + number + h / number * (checkInverted(yInvert,i) * ySkew) + Math.sin(i) * number;
+        x += Math.sin(x / w * Math.PI * 2) * 100 * xSkew;
+        y += Math.sin(y / h * Math.PI * 2) * 100 * ySkew;
         let wi = 300 + 200 * Math.random();
         let he = 300 + 200 * Math.random();
         container.addCloudBox(
-            x - 100 - wi * 0.5, 
-            y - 100 - he * 0.5, 
-            wi + i * 20, 
-            he + i * 20, 
-            200 + 50 * Math.random(),
-            100 + 25 * Math.random(),
+            x - 100 - wi * 0.5,
+            y - 100 - he * 0.5,
+            wi + i * 20,
+            (he + i * 20) / 2,
+            200 + 50 * Math.random(), //molndenistet inom chunken
+            75 + 25 * Math.random(), //storlek på gradient-cirklarna
             shade);
     }
     container.render();

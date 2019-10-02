@@ -101,7 +101,7 @@ function drawStars() {
     while (stars.length < gfxConf.presets[gfxConf.current].stars) {
         let x = w * Math.random();
         let y = h * Math.random();
-        if(inBorder(x, y) || Math.random() > 0.8) {
+        if(inBorder(x, y) || Math.random() > 0.85) {
             stars.push(new Star(2, x, y));
         }
     }

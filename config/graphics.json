@@ -32,11 +32,11 @@
         }
     ],
     "current": 2,
-    "minFrameTime": 35,
+    "minFrameTime": 20,
     "maxFrameTime": 40,
-    "maxFPS": 30,
-    "dynamicRendering": true,
-    "samplingInterval": 60,
+    "maxFPS": 60,
+    "dynamicRendering": false,
+    "samplingInterval": 600,
     "minTimeBetweenOptimization": 10000,
     "logFrametime": false
 }

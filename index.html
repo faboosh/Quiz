@@ -13,18 +13,19 @@
     <link rel="stylesheet" href="css/endscreen.css">
     <link rel="stylesheet" href="css/mediaqueries.css">
     <link rel="stylesheet" href="css/colors.css">
-    <title id="title">RETROQUIZ</title>
+    <title id="title">&#128187;RETROQUIZ&#128187;</title>
 </head>
 
 <header>
     <h1 class="rainbow-bg-text">RETROQUIZ</h1>
+</header>
+
+<body>
     <div id="canvases">
         <canvas id="star-canvas"></canvas>
         <canvas id="cloud-canvas"></canvas>
     </div>
-</header>
 
-<body>
     <div class="fullscreen">
         <div class="startmenu" id="startmenu">
             <h1 id="title">WELCOME TO RETROQUIZ</h1>
@@ -35,13 +36,13 @@
             <button class="rainbow-button-hover hidden" id="startButton">Play!</button>
         </div>
         <div class="endscreen hidden" id="endscreen">
-            <h1 id="endscreen-score">död</h1>
+            <h1 id="endscreen-score"></h1>
             <button class="rainbow-button-hover" id="restart">Restart</button>
         </div>
     </div>
 
-
     <div class="wrapper">
+        <button id="new-bg">Randomize new background</button>
         <div class="question-box rainbow-boxshadow hidden" id="question-box">
             <p class="question" id="question"></p>
             <div class="options">

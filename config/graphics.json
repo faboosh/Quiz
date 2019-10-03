@@ -2,19 +2,19 @@
     "presets": [
         {
             "title": "ultra",
-            "stars": 5000,
-            "ship": true,
-            "freezeOnTransition": false
-        },
-        {
-            "title": "high",
             "stars": 2500,
             "ship": true,
             "freezeOnTransition": false
         },
         {
-            "title": "medium",
+            "title": "high",
             "stars": 1200,
+            "ship": true,
+            "freezeOnTransition": false
+        },
+        {
+            "title": "medium",
+            "stars": 800,
             "ship": true,
             "freezeOnTransition": false
         },

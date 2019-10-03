@@ -32,11 +32,11 @@ class Quiz {
         this.question.correct = question.correct;
     }
 
-    //Sköter all CSS som krävs för övergången mellan frågor
+    //Sköter all CSS-klassbyten som krävs för övergången mellan frågor
     transition() {
         let qBox = document.getElementById('question-box');
 
-        if (this.checkAnswer()) {
+        if (this.checkAnswer(Array.from(document.getElementsByClassName('answer')).map((answer) => { return answer.checked }))) {
             qBox.classList.add('fly', 'rainbow-boxshadow-flight');
         } else {
             qBox.classList.add('fly-failed');
@@ -60,10 +60,7 @@ class Quiz {
         }, 900);
     }
 
-    checkAnswer() {
-        //Lagrar användarens svar som bools 
-        let answers = Array.from(document.getElementsByClassName('answer')).map((answer) => { return answer.checked });
-
+    checkAnswer(answers) {
         //kollar så att användaren inte angett för många svar
         if (answers.filter((answer) => { return answer == true }).length == this.question.correct.length) {
 
@@ -81,11 +78,11 @@ class Quiz {
     next() {
         let extraTimeout = 0;
         this.player[0].question++;
-        this.player[0].answers.push(this.checkAnswer());
+        this.player[0].answers.push(this.checkAnswer(Array.from(document.getElementsByClassName('answer')).map((answer) => { return answer.checked })));
         if (this.player[0].question >= this.questions.length) {
             this.end();
         } else {
-            if (this.checkAnswer()) {
+            if (this.checkAnswer(Array.from(document.getElementsByClassName('answer')).map((answer) => { return answer.checked }))) {
                 extraTimeout = 400;
                 this.question.title.innerText = 'Correct!';
                 this.qBox.classList.add('celebrate');

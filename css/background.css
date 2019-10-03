@@ -11,6 +11,6 @@ canvas {
     transition-delay: 0.6s;
 }
 
-#cloud-canvas{
+#cloud-canvas, #cloud-canvas2{
     filter: blur(2px);
 }

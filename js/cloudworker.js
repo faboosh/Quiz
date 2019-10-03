@@ -136,8 +136,6 @@ class GradientCircle {
     }
 }
 
-let cloud;
-
 let c; //Canvas-element
 let pen; //Canvasens rendering context
 let gfxConf; //Lagrar grafikinställningar
@@ -153,7 +151,9 @@ let samplingInterval; //Antal frames som ska vara mellan varje optimeringsförs�
 let lastOptimize = performance.now(); //Tidpunkten då senaste optimeringen skedde
 let minOptimizeInterval; //Minimumtid mellan optimeringar i millisekunder
 
-function animate() {
+
+//animate används inte, ligger mest här ifall jag skulle få för mig att använda den till något.
+/*function animate() {
     //Requestar ny bildruta och lagrar den nuvarande bildrutan i
     //currentFrame (behövs för att kunna pausa animationen)
     currentFrame = self.requestAnimationFrame(animate);
@@ -185,12 +185,11 @@ function animate() {
         }
 
     }
-}
+}*/
 
 self.onmessage = (e) => {
     //Initialiserar bakgrunds-workern med canvasens 
     //nuvarande storlek, nuvarande grafik-config 
-    //och startar animationen
     if (e.data.msg == 'init') {
         c = e.data.canvas;
         pen = c.getContext('2d');
@@ -208,7 +207,7 @@ self.onmessage = (e) => {
 
     //Uppdaterar canvasens upplösning till skärmens
     //upplösning då huvudsidan rapporterar att 
-    //upplösningen ändras
+    //upplösningen ändrats
     if (e.data.msg === 'resize') {
         console.log('recieved');
         w = e.data.w;
@@ -229,42 +228,70 @@ function updateCanvasRes(newW, newH) {
 }
 
 function renderClouds() {
-    let xSkew = Math.random();
-    let ySkew = Math.random();
-    let c1Mod = Math.random();
-    let c2Mod = Math.random();
+    //Objekt som innehåller molnklusterna
     let container = new CloudBoxContainer(pen);
-    let number = 35;
-    let xInvert = Math.random() > 0.5;
-    let yInvert = Math.random() > 0.5;
-    function checkInverted(axis, i){
-        if(axis){
-            return number - i;
-        } else {
-            return i;
+
+    let c1, c2, shade, x, y, wi, he;
+
+    function fancyCloudGen() {
+        //Skalar molnet på X och Y-axeln
+        let xSkew = 0.5 + Math.random();
+        let ySkew = 0.5 + Math.random();
+
+        //Random modifier på gröna och blåa kanalen
+        let c1Mod = Math.random();
+        let c2Mod = Math.random();
+
+        //Antal molnkluster
+        let number = 35;
+
+        //Inverterar X respektive Y ifall de är sanna
+        let xInvert = Math.random() > 0.5;
+        let yInvert = Math.random() > 0.5;
+
+        //Returnerar inverterad i, används för att invertera riktningen på molnen 
+        function checkInverted(axis, i) {
+            if (axis) {
+                return number - i;
+            } else {
+                return i;
+            }
+        }
+
+        for (let i = 0; i < number; i++) {
+            //Räknar ut färgerna för röda och gröna kanalerna och lägger dem i shade
+            c1 = Math.round((255 * c1Mod) * i / number);
+            c2 = 255 - Math.round((255 * c2Mod) * i / number);
+            shade = c1 + ',' + c2;
+
+            //Sätter nuvarande molnklusters position
+            x = w * Math.random() * 0.2 + w / number * (checkInverted(xInvert, i) * xSkew) + Math.sin(i) * number;
+            y = h * Math.random() * 0.2 + number + h / number * (checkInverted(yInvert, i) * ySkew) + Math.sin(i) * number;
+            x += Math.sin(x / w * Math.PI * 2) * 100 * xSkew;
+            y += Math.sin(y / h * Math.PI * 2) * 100 * ySkew;
+
+            //Sätter molnklustrets bredd och höjd
+            wi = 300 + 200 * Math.random();
+            he = 300 + 200 * Math.random();
+
+            //Skapar molnkluster
+            container.addCloudBox(
+                x - 100 - wi * 0.5,
+                y - 100 - he * 0.5,
+                wi + i * 20,
+                (he + i * 20) / 2,
+                200 + 50 * Math.random(), //molndenistet inom chunken
+                75 + 25 * Math.random(), //storlek på gradient-cirklarna
+                shade);
         }
     }
-    for (let i = 0; i < number; i++) {
-        let c1 = Math.round((255 * c1Mod) * i / number);
-        let c2 = 255 - Math.round((255 * c2Mod) * i / number);
-        let shade = c1 + ',' + c2;
-        let x = w * Math.random() * 0.2 + w / number * (checkInverted(xInvert,i) * xSkew) + Math.sin(i) * number;
-        let y = h * Math.random() * 0.2 + number + h / number * (checkInverted(yInvert,i) * ySkew) + Math.sin(i) * number;
-        x += Math.sin(x / w * Math.PI * 2) * 100 * xSkew;
-        y += Math.sin(y / h * Math.PI * 2) * 100 * ySkew;
-        let wi = 300 + 200 * Math.random();
-        let he = 300 + 200 * Math.random();
-        container.addCloudBox(
-            x - 100 - wi * 0.5,
-            y - 100 - he * 0.5,
-            wi + i * 20,
-            (he + i * 20) / 2,
-            200 + 50 * Math.random(), //molndenistet inom chunken
-            75 + 25 * Math.random(), //storlek på gradient-cirklarna
-            shade);
-    }
+
+    fancyCloudGen();
+    //Renderar alla molnkluster
     container.render();
     //animate();
 }
 
+
+//kanal för att prata med starworker
 const channel = new BroadcastChannel('channel');

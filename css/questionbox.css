@@ -137,3 +137,11 @@ span {
 #nextQuestion:hover{
     opacity: 1;
 }
+
+#new-bg {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    height: 80px;
+    width: 240px;
+}

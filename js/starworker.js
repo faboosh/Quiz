@@ -1,11 +1,13 @@
 class Star {
     constructor(size, x, y) {
         let randomSize = size * Math.random() / 2;
+
         if (randomSize >= 0.2) {
             this.size = randomSize;
         } else {
             this.size = 0.2;
         }
+
         this.x = x;
         this.y = y;
         this.osc1Rate = 2 * Math.random();
@@ -14,14 +16,16 @@ class Star {
         this.osc2Pos = 0;
         this.oscMax = 1000;
         this.polarity = true;
-        this.hasTrail = Math.random() > 0.995;
+        this.hasTrail = Math.random() > 0.98;
         this.hasTrailSpeed = false;
         this.trail = [];
         this.trailInterval = 5;
         this.luminosity = 0.3 + Math.random() * 0.7;
+
         if (this.hasTrail || Math.random() > 0.9) {
             this.size *= 2;
         }
+
         this.velX = (1 * Math.random() - 0.5 * this.size) / 6;
         this.velY = (1 * Math.random() - 0.5 * this.size) / 6;
     }
@@ -88,24 +92,8 @@ class Star {
     }
 }
 
+//Lagrar stjärnor
 let stars = [];
-
-//Tar bort alla stjärnor och renderar nya
-function redrawStars() {
-    stars = [];
-    drawStars();
-}
-
-//Ritar ett specificerat antal stjärnor
-function drawStars() {
-    while (stars.length < gfxConf.presets[gfxConf.current].stars) {
-        let x = w * Math.random();
-        let y = h * Math.random();
-        if(inBorder(x, y) || Math.random() > 0.85) {
-            stars.push(new Star(2, x, y));
-        }
-    }
-}
 
 let c; //Canvas-element
 let pen; //Canvasens rendering context
@@ -178,6 +166,8 @@ function animate() {
                     }
                 }
                 stars[i].drawTrail(pen);
+
+                //Ger stjärnan en högre hastighet ifall den har en svans
                 if (!stars[i].hasTrailSpeed) {
                     stars[i].velY *= 10;
                     stars[i].velX *= 10;
@@ -236,6 +226,16 @@ self.onmessage = (e) => {
     }
 }
 
+let borders;
+const channel = new BroadcastChannel('channel');
+channel.onmessage = (e) => {
+    if (e.data.msg == 'borders') {
+        borders = JSON.parse(e.data.borders);
+        redrawStars();
+        animate();
+    }
+};
+
 //Uppdaterar canvasens storlek med en ny höjd och
 //bredd, samt ritar om alla stjärnor så de passar inom den
 //nya skärmytan
@@ -246,16 +246,22 @@ function updateCanvasRes(newW, newH) {
     c.width = w;
 }
 
-let borders;
-const channel = new BroadcastChannel('channel');
-channel.onmessage = (e) => {
-    if (e.data.msg == 'borders') {
-        console.log(JSON.parse(e.data.borders));
-        borders = JSON.parse(e.data.borders);
-        redrawStars();
-        animate();
+//Tar bort alla stjärnor och renderar nya
+function redrawStars() {
+    stars = [];
+    drawStars();
+}
+
+//Ritar ett specificerat antal stjärnor
+function drawStars() {
+    while (stars.length < gfxConf.presets[gfxConf.current].stars) {
+        let x = w * Math.random();
+        let y = h * Math.random();
+        if(inBorder(x, y) || Math.random() > 0.85) {
+            stars.push(new Star(2, x, y));
+        }
     }
-};
+}
 
 function inBorder(x, y) {
     let inBorder = false;

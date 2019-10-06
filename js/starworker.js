@@ -17,17 +17,20 @@ class Star {
         this.oscMax = 1000;
         this.polarity = true;
         this.hasTrail = Math.random() > 0.98;
-        this.hasTrailSpeed = false;
         this.trail = [];
         this.trailInterval = 5;
         this.luminosity = 0.3 + Math.random() * 0.7;
+        
+        this.velX = (1 * Math.random() - 0.5 * this.size) / 6;
+        this.velY = (1 * Math.random() - 0.5 * this.size) / 6;
 
         if (this.hasTrail || Math.random() > 0.9) {
             this.size *= 2;
+            if(this.hasTrail){
+                this.velY *= 10;
+                this.velX *= 10;
+            }
         }
-
-        this.velX = (1 * Math.random() - 0.5 * this.size) / 6;
-        this.velY = (1 * Math.random() - 0.5 * this.size) / 6;
     }
 
     //Räknar ut sinusmotsvarigheten???? <--(probably inte ett ord) till oscillatorns position
@@ -166,13 +169,6 @@ function animate() {
                     }
                 }
                 stars[i].drawTrail(pen);
-
-                //Ger stjärnan en högre hastighet ifall den har en svans
-                if (!stars[i].hasTrailSpeed) {
-                    stars[i].velY *= 10;
-                    stars[i].velX *= 10;
-                    stars[i].hasTrailSpeed = true;
-                }
             }
             //Ritar stjärnan
             stars[i].draw(pen);

@@ -18,16 +18,3 @@ let cloudWorker = new ExperimentalCanvasWorker('cloud-canvas', 'js/cloudworker.j
 
 cloudWorker.startWorker();
 workerArray.push(cloudWorker);
-
-//legacyrendering
-/*workerArray.forEach((current) => {
-    current.worker.addEventListener('message', (e) => {
-        if (e.data.msg == 'render') {
-            bitmap.transferFromImageBitmap(e.data.bitmap);
-        }
-
-        if (e.data.msg == 'transfer') {
-            console.log('transfered');
-        }
-    })
-});*/

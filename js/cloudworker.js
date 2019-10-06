@@ -1,6 +1,6 @@
 class CloudBoxContainer {
     constructor(ctx) {
-        this.clouds = []
+        this.clouds = [];
         this.ctx = ctx;
     }
 
@@ -94,15 +94,12 @@ class GradientCircle {
         this.y = y;
         this.velX = Math.random();
         this.velY = Math.random();
-        this.polX = true;
-        this.polY = true;
         this.shade = shade;
         this.radius = radius;
         let minRadius = 40;
         if (this.radius < minRadius) {
             this.radius = minRadius;
         }
-        this.pulsate = 0;
         let colorRand = Math.random();
         if (colorRand > 0.8) {
             this.basecolor = '255,' + this.shade;
@@ -120,10 +117,6 @@ class GradientCircle {
         this.midpoint = Math.random() * 0.5;
     }
 
-    swell() {
-
-    }
-
     render(ctx) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
@@ -138,54 +131,6 @@ class GradientCircle {
 
 let c; //Canvas-element
 let pen; //Canvasens rendering context
-let gfxConf; //Lagrar grafikinställningar
-let fps; //Target-fps:en
-let now; //Nuvarande tidpunkt
-let then = performance.now(); //Tidpunkten då senaste bildruta ritades
-let interval; //Antalet millisekunder per bildruta
-let frametime;  //Lagrar frametime för nuvarande bildruta
-let currentFrame; //Lagrar den nuvarande bildrutan i animationen
-let averageFrametime = 0; //Lagrar alla frametimes mellan frameratesamplingsintervallen
-let frameCounter = 0; //Räknar antal bildruta mellan
-let samplingInterval; //Antal frames som ska vara mellan varje optimeringsförsök
-let lastOptimize = performance.now(); //Tidpunkten då senaste optimeringen skedde
-let minOptimizeInterval; //Minimumtid mellan optimeringar i millisekunder
-
-
-//animate används inte, ligger mest här ifall jag skulle få för mig att använda den till något.
-/*function animate() {
-    //Requestar ny bildruta och lagrar den nuvarande bildrutan i
-    //currentFrame (behövs för att kunna pausa animationen)
-    currentFrame = self.requestAnimationFrame(animate);
-    now = performance.now();
-    frametime = now - then;
-
-    if (frametime > interval) {
-        then = now - (frametime % interval);
-        if (gfxConf.dynamicRendering) {
-            frameCounter++
-            if (frameCounter < samplingInterval) {
-                averageFrametime += frametime;
-            } else {
-                if ((averageFrametime / frameCounter) > gfxConf.maxFrameTime && (gfxConf.current + 1) < gfxConf.presets.length && ((now - lastOptimize) > minOptimizeInterval)) {
-                    lastOptimize = performance.now();
-                    gfxConf.current++;
-                    console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
-                } else if ((averageFrametime / frameCounter) < gfxConf.minFrameTime && gfxConf.current != 0 && ((now - lastOptimize) > minOptimizeInterval)) {
-                    lastOptimize = performance.now();
-                    gfxConf.current--;
-                    console.log('config changed to ' + gfxConf.presets[gfxConf.current].title);
-                }
-                if (gfxConf.logFrametime) {
-                    console.log('Frametime: ' + Math.round(averageFrametime / frameCounter) + 'ms \n FPS:' + Math.round(1000 / Math.round(averageFrametime / frameCounter)));
-                }
-                frameCounter = 0;
-                averageFrametime = 0;
-            }
-        }
-
-    }
-}*/
 
 self.onmessage = (e) => {
     //Initialiserar bakgrunds-workern med canvasens 
@@ -195,21 +140,13 @@ self.onmessage = (e) => {
         pen = c.getContext('2d');
         w = e.data.w;
         h = e.data.h;
-        gfxConf = e.data.gfxConf;
-        console.log(gfxConf);
-        fps = gfxConf.maxFPS / 2;
-        interval = 1000 / fps;
-        samplingInterval = gfxConf.samplingInterval;
-        minOptimizeInterval = gfxConf.minTimeBetweenOptimization;
         renderClouds();
-        //animate();
     }
 
     //Uppdaterar canvasens upplösning till skärmens
     //upplösning då huvudsidan rapporterar att 
     //upplösningen ändrats
     if (e.data.msg === 'resize') {
-        console.log('recieved');
         w = e.data.w;
         h = e.data.h;
         updateCanvasRes(w, h);
@@ -289,9 +226,7 @@ function renderClouds() {
     fancyCloudGen();
     //Renderar alla molnkluster
     container.render();
-    //animate();
 }
-
 
 //kanal för att prata med starworker
 const channel = new BroadcastChannel('channel');

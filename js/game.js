@@ -1,5 +1,5 @@
 const quiz = new Quiz();
-quiz.player.push(new Player());
+quiz.player = new Player();
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('startButton').disabled = true;
@@ -30,8 +30,13 @@ function updateCanvasRes() {
 
 //Lyssnar efter när spelaren trycker på startknappen
 document.getElementById('startButton').addEventListener('click', () => {
-    quiz.questions = quiz.jsonResponse.slice(0, document.getElementById('no-of-questions').valueAsNumber);
+    quiz.setNoOfQuestions();
+
+    //force-uppdatering av upplösningen, då den ibland inte uppdaterades 
+    //när upplösningen ändrats under tiden 
+    //spelaren va på startstkärmen
     updateCanvasRes();
+
     quiz.start();
 })
 

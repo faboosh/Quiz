@@ -2,6 +2,7 @@
     "questions": [
         {
             "title": "What does the <span>CRT</span> in CRT-TV stand for?",
+            "category": "Technology",
             "options": [
                 "Controlled Radiation Tubes",
                 "Cathode Ray Tube",
@@ -13,6 +14,7 @@
     
         {
             "title": "Who coined the phrase <span>\"Just keep swimming\"</span>?",
+            "category": "Movies",
             "options": [
                 "Marty",
                 "Bruce",
@@ -24,28 +26,40 @@
 
         {
             "title": "What year was <span>Super Smash Bros: Melee</span> released?",
+            "category": "Gaming",
             "options": [
                 "2002",
                 "2001",
-                "2003",
-                "2004"
+                "2003"
             ],
             "correct": [1]
         },
 
         {
             "title": "What song, by Macintosh Plus, has been dubbed the <span>\"National Anthem of Vaporwave\"?</span>",
+            "category": "Music",
             "options": [
-                "Boot",
-                "Chill Divin' with ECCO",
                 "Floral Shoppe",
-                "Lisa Frank <br>420/Modern Computing"
+                "Lisa Frank 420/Modern Computing"
             ],
-            "correct": [3]
+            "correct": [1]
+        },
+
+        {
+            "title": "What was the name of the company who produced the legendary C64 and VIC20 computers?",
+            "category": "Technology",
+            "options": [
+                "Sinclair",
+                "Commodore",
+                "Atari",
+                "Tandy"
+            ],
+            "correct": [1]
         },
 
         {
             "title": "Who sung the vocals on deadmau5's hit single <span>\"Ghosts and Stuff\"</span>?",
+            "category": "Music",
             "options": [
                 "Madeon",
                 "Rob Swire",
@@ -56,7 +70,20 @@
         },
 
         {
+            "title": "Which of these are consoles by <span>Nintendo</span>?",
+            "category": "Gaming",
+            "options": [
+                "Virtual Boy",
+                "Mega Drive",
+                "SNES",
+                "Saturn"
+            ],
+            "correct": [0, 2]
+        },
+
+        {
             "title": "Which of the following are members of <span>Metallica</span>",
+            "category": "Music",
             "options": [
                 "Kurt Cobain",
                 "James Hetfield",
@@ -65,8 +92,10 @@
             ],
             "correct": [1,3]
         },
+
         {
             "title": "What is <span>Skrillex's</span> real name?",
+            "category": "Music",
             "options": [
                 "Jason Zimmerman",
                 "Eric Bazillian",
@@ -74,6 +103,17 @@
                 "Bas Oskam"
             ],
             "correct": [2]
+        },
+
+        {
+            "title": "Who used <span>Blast Processing</span> as a major selling point for their console?",
+            "category": "Gaming",
+            "options": [
+                "Nintendo",
+                "SEGA",
+                "Sony"
+            ],
+            "correct": [1]
         }
     ]
 }

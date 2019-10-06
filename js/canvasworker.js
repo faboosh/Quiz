@@ -1,7 +1,11 @@
 //Skapar canvas och worker för experimentell offscreen-rendering
 class ExperimentalCanvasWorker {
     constructor(canvasName, pathToWorker, pathToConfig) {
-        this.canvas = document.getElementById(canvasName);
+        if(canvasName == 'check'){
+            this.canvas = document.createElement('canvas');
+        } else {
+            this.canvas = document.getElementById(canvasName);
+        }
         this.canvas.height = window.innerHeight;
         this.canvas.width = window.innerWidth;
         this.offscreen = this.canvas.transferControlToOffscreen();

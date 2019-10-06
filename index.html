@@ -35,6 +35,7 @@
             </div>
             <button class="rainbow-button-hover hidden" id="startButton">Play!</button>
         </div>
+
         <div class="endscreen hidden" id="endscreen">
             <h1 id="endscreen-score"></h1>
             <button class="rainbow-button-hover" id="restart">Restart</button>
@@ -44,13 +45,8 @@
     <div class="wrapper">
         <button id="new-bg">Randomize new background</button>
         <div class="question-box rainbow-boxshadow hidden" id="question-box">
-            <p class="question" id="question"></p>
-            <div class="options">
-                <label class="checkbox" id="lbl1" for="option1"></label><br>
-                <label class="checkbox" id="lbl2" for="option2"></label><br>
-                <label class="checkbox" id="lbl3" for="option3"></label><br>
-                <label class="checkbox" id="lbl4" for="option4"></label><br>
-            </div>
+            <p class="question"></p>
+            <div class="options"></div>
             <button id="nextQuestion" class="rainbow-button-hover">Next Question</button>
         </div>
 
@@ -61,6 +57,7 @@
 
     <script src="js/canvasworker.js"></script>
     <script src="js/fetchJSON.js"></script>
+    <script src="js/question.js"></script>
     <script src="js/quiz.js"></script>
     <script src="js/player.js"></script>
     <script src="js/game.js"></script>
